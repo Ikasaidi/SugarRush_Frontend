@@ -1,21 +1,30 @@
-import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import TabBar from './TabBar';
+import React, { useState } from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import HomeScreen from '../screens/HomeScreen';
+import AuthNavigator from './AuthNavigator';
+import MainTabs from './MainTabs';
+import AuthContext from '../context/AuthContext';
 
-const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
-    return (
-        <Tab.Navigator
-            tabBar={(props) => <TabBar {...props} />}
-            screenOptions={{ headerShown: false }}
-        >
-            <Tab.Screen name="Schedule" component={HomeScreen} />
-            <Tab.Screen name="My QR" component={HomeScreen} />
-            <Tab.Screen name="Tickets" component={HomeScreen} />
-            <Tab.Screen name="Profile" component={HomeScreen} />
-        </Tab.Navigator>
-    );
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const authContext = {
+    isLoggedIn,
+    login: () => setIsLoggedIn(true),
+    logout: () => setIsLoggedIn(false),
+  };
+
+  return (
+    <AuthContext.Provider value={authContext}>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {isLoggedIn ? (
+          <Stack.Screen name="Main" component={MainTabs} />
+        ) : (
+          <Stack.Screen name="Auth" component={AuthNavigator} />
+        )}
+      </Stack.Navigator>
+    </AuthContext.Provider>
+  );
 }
