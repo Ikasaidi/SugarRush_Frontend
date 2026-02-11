@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
 
 import AuthContext from '../context/AuthContext';
 import styles, { COLORS } from '../styles/login';
@@ -11,6 +12,7 @@ import GradientButton from '../components/GradientButton';
 
 export default function LoginScreen() {
   const { login } = useContext(AuthContext);
+  const navigation = useNavigation();
 
   return (
     <LinearGradient
@@ -30,9 +32,14 @@ export default function LoginScreen() {
         <GradientButton title="Sign In" onPress={login} />
 
         <Text style={styles.footer}>
-          No account yet? <Text style={styles.link}>Sign up</Text>
+          No account yet?{' '}
+          <Text
+            style={styles.link}
+            onPress={() => navigation.navigate('Signup')}
+          >
+            Sign up
+          </Text>
         </Text>
-
       </View>
     </LinearGradient>
   );
