@@ -65,7 +65,7 @@ export default function PaymentScreen() {
         {cards.map((card, index) => (
           <TouchableOpacity
             key={index}
-            onLongPress={() => deleteCard(index)} // 🔥 suppression
+            onLongPress={() => deleteCard(index)}
           >
             <View style={styles.bankCard}>
               <LinearGradient
