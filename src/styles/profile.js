@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     cardClean: {
         width: "90%",
         maxWidth: 450,
-        backgroundColor: "#EC6A8E",
+        backgroundColor: "#FCE4EC",
         borderRadius: 20,
         padding: 15,
         shadowColor: "#250404",
@@ -267,7 +267,132 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: "600",
     },
+    cardPremium: {
+        width: "90%",
+        maxWidth: 400,
+        backgroundColor: "#fff",
+        borderRadius: 18,
+        paddingVertical: 10,
+        shadowColor: "#000",
+        shadowOpacity: 0.06,
+        shadowRadius: 10,
+        elevation: 3,
+    },
 
+    sectionTitle: {
+        fontSize: 12,
+        color: "#888",
+        marginBottom: 10,
+        paddingHorizontal: 15,
+    },
+
+    itemRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingVertical: 20,
+        paddingHorizontal: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: "#F1F1F1",
+    },
+
+    itemLeft: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+
+    iconBox: {
+        width: 30,
+        height: 30,
+        borderRadius: 8,
+        backgroundColor: "#FCE4EC",
+        alignItems: "center",
+        justifyContent: "center",
+        marginRight: 10,
+    },
+
+    itemText: {
+        fontSize: 14,
+        fontWeight: "500",
+    },
+    bankCard: {
+        width: "90%",
+        maxWidth: 400,
+        borderRadius: 20,
+        overflow: "hidden",
+        marginBottom: 20,
+    },
+
+    bankCardGradient: {
+        padding: 20,
+        height: 180,
+        justifyContent: "space-between",
+    },
+
+    cardBrand: {
+        color: "#fff",
+        fontSize: 14,
+        fontWeight: "600",
+        alignSelf: "flex-end",
+    },
+
+    cardNumber: {
+        color: "#fff",
+        fontSize: 18,
+        letterSpacing: 2,
+    },
+
+    cardBottom: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+
+    cardName: {
+        color: "#fff",
+        fontSize: 13,
+    },
+
+    addCard: {
+        width: "90%",
+        maxWidth: 400,
+        backgroundColor: "#fff",
+        borderRadius: 15,
+        padding: 15,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        shadowColor: "#000",
+        shadowOpacity: 0.05,
+        shadowRadius: 10,
+        elevation: 2,
+    },
+
+    addText: {
+        marginLeft: 8,
+        fontSize: 14,
+        fontWeight: "500",
+    },
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: "rgba(0,0,0,0.4)",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    modalCard: {
+        width: "85%",
+        backgroundColor: "#fff",
+        borderRadius: 20,
+        padding: 20,
+    },
+
+    modalTitle: {
+        fontSize: 16,
+        fontWeight: "600",
+        marginBottom: 15,
+        textAlign: "center",
+    },
 });
 
 export default styles;
