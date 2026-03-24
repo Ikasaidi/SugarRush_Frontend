@@ -9,21 +9,22 @@ const styles = StyleSheet.create({
     titleTickets: {
         color: "#fff",
         fontSize: 18,
+        marginTop: 40,
         fontWeight: "600",
-        marginLeft: 15,
+        marginLeft: 30,
     },
 
     subtitleTickets: {
         color: "#fff",
         fontSize: 14,
-        marginTop: 5,
-        marginLeft: 15,
+        marginTop: 4,
+        marginLeft: 30,
         opacity: 0.9,
     },
 
     qrCardContainer: {
-        width: cardWidth, 
-        alignSelf: "center", 
+        width: cardWidth,
+        alignSelf: "center",
         backgroundColor: "#fff",
         borderRadius: 25,
         overflow: "hidden",
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
     qrBox: {
         alignItems: "center",
         justifyContent: "center",
-        paddingVertical: 25, 
+        paddingVertical: 25,
     },
 
     qrIdBox: {

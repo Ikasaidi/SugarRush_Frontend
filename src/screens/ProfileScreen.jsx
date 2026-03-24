@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import AuthContext from "../context/AuthContext";
@@ -12,7 +12,11 @@ export default function ProfileScreen() {
     const navigation = useNavigation();
 
     return (
-        <View style={styles.container}>
+        <ScrollView
+            style={styles.container}
+            contentContainerStyle={{ paddingBottom: 40 }}
+            showsVerticalScrollIndicator={false}
+        >
 
             <LinearGradient
                 colors={["#FF8FB3", "#EC6A8E"]}
@@ -21,6 +25,7 @@ export default function ProfileScreen() {
                 <View style={styles.avatar}>
                     <Ionicons name="person-outline" size={40} color="#EC6A8E" />
                 </View>
+
                 <Text style={styles.email}>@candytrain.com</Text>
 
                 <TouchableOpacity
@@ -131,6 +136,6 @@ export default function ProfileScreen() {
                 <Text style={styles.logoutText}>Se déconnecter</Text>
             </TouchableOpacity>
 
-        </View>
+        </ScrollView>
     );
 }

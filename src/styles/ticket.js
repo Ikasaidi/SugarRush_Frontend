@@ -5,9 +5,10 @@ const styles = StyleSheet.create({
 
     titleTickets: {
         color: "#fff",
+        marginTop: 40,
         fontSize: 20,
         fontWeight: "600",
-        marginLeft: 10,
+        marginLeft: 30,
 
     },
 
@@ -15,7 +16,7 @@ const styles = StyleSheet.create({
         color: "#fff",
         fontSize: 15,
         marginTop: 5,
-        marginLeft: 11,
+        marginLeft: 30,
         opacity: 1,
     },
 
