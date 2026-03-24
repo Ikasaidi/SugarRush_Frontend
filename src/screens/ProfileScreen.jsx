@@ -3,19 +3,17 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import AuthContext from "../context/AuthContext";
-import { useNavigation } from "@react-navigation/native"; 
+import { useNavigation } from "@react-navigation/native";
 import styles from "../styles/profile";
-
 
 export default function ProfileScreen() {
 
-    const { logout } = useContext(AuthContext); // ✅ IMPORTANT
-    const navigation = useNavigation(); // ✅ IMPORTANT
+    const { logout } = useContext(AuthContext);
+    const navigation = useNavigation();
 
     return (
         <View style={styles.container}>
 
-            {/* HEADER */}
             <LinearGradient
                 colors={["#FF8FB3", "#EC6A8E"]}
                 style={styles.header}
@@ -25,19 +23,26 @@ export default function ProfileScreen() {
                 </View>
                 <Text style={styles.email}>@candytrain.com</Text>
 
-                <TouchableOpacity style={styles.qrCard}>
+                <TouchableOpacity
+                    style={styles.qrCard}
+                    activeOpacity={0.8}
+                    onPress={() => navigation.navigate("My QR")}
+                >
                     <View style={styles.qrLeft}>
                         <Ionicons name="qr-code-outline" size={22} color="#EC6A8E" />
                     </View>
+
                     <View style={{ flex: 1 }}>
                         <Text style={styles.qrTitle}>Mon QR Code</Text>
-                        <Text style={styles.qrSubtitle}>Afficher mon code personnel</Text>
+                        <Text style={styles.qrSubtitle}>
+                            Afficher mon code personnel
+                        </Text>
                     </View>
+
                     <Ionicons name="chevron-forward" size={20} color="#999" />
                 </TouchableOpacity>
             </LinearGradient>
 
-            {/* WALLET */}
             <View style={styles.card}>
                 <View style={styles.cardHeader}>
                     <Ionicons name="wallet-outline" size={20} color="#EC6A8E" />
@@ -64,7 +69,6 @@ export default function ProfileScreen() {
                 </View>
             </View>
 
-            {/* HISTORY */}
             <View style={styles.card}>
                 <View style={styles.cardHeader}>
                     <Ionicons name="time-outline" size={20} color="#EC6A8E" />
@@ -76,12 +80,10 @@ export default function ProfileScreen() {
                 </Text>
             </View>
 
-            {/* SETTINGS */}
             <View style={styles.card}>
                 <Text style={styles.settingsTitle}>Paramètres du compte</Text>
 
-                {/* 👤 */}
-                <TouchableOpacity 
+                <TouchableOpacity
                     style={styles.settingItem}
                     onPress={() => navigation.navigate("PersonalInfo")}
                 >
@@ -94,8 +96,7 @@ export default function ProfileScreen() {
                     <Ionicons name="chevron-forward" size={18} color="#999" />
                 </TouchableOpacity>
 
-                {/* 📧 */}
-                <TouchableOpacity 
+                <TouchableOpacity
                     style={styles.settingItem}
                     onPress={() => navigation.navigate("Notifications")}
                 >
@@ -108,8 +109,7 @@ export default function ProfileScreen() {
                     <Ionicons name="chevron-forward" size={18} color="#999" />
                 </TouchableOpacity>
 
-                {/* 💳 */}
-                <TouchableOpacity 
+                <TouchableOpacity
                     style={styles.settingItem}
                     onPress={() => navigation.navigate("Payment")}
                 >
@@ -123,10 +123,9 @@ export default function ProfileScreen() {
                 </TouchableOpacity>
             </View>
 
-            {/* LOGOUT */}
-            <TouchableOpacity 
-                style={styles.logoutButton} 
-                onPress={logout} 
+            <TouchableOpacity
+                style={styles.logoutButton}
+                onPress={logout}
             >
                 <Ionicons name="log-out-outline" size={18} color="#fff" />
                 <Text style={styles.logoutText}>Se déconnecter</Text>

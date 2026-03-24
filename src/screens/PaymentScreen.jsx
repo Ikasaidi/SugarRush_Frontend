@@ -24,7 +24,6 @@ export default function PaymentScreen() {
   const [number, setNumber] = useState("");
   const [name, setName] = useState("");
 
-  // ➕ Ajouter carte
   const addCard = () => {
     if (number && name) {
       setCards([...cards, { number, name }]);
@@ -34,7 +33,6 @@ export default function PaymentScreen() {
     }
   };
 
-  // ❌ Supprimer carte
   const deleteCard = (index) => {
     const updated = cards.filter((_, i) => i !== index);
     setCards(updated);
@@ -43,7 +41,6 @@ export default function PaymentScreen() {
   return (
     <View style={styles.container}>
 
-      {/* HEADER */}
       <LinearGradient
         colors={["#FF8FB3", "#EC6A8E"]}
         style={styles.headerClean}
@@ -61,7 +58,6 @@ export default function PaymentScreen() {
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
 
-        {/* CARTES */}
         {cards.map((card, index) => (
           <TouchableOpacity
             key={index}
@@ -87,7 +83,6 @@ export default function PaymentScreen() {
           </TouchableOpacity>
         ))}
 
-        {/* ADD BUTTON */}
         <TouchableOpacity
           style={styles.addCard}
           onPress={() => setModalVisible(true)}
@@ -98,7 +93,6 @@ export default function PaymentScreen() {
 
       </ScrollView>
 
-      {/* MODAL */}
       <Modal visible={modalVisible} animationType="slide" transparent>
         <View style={styles.modalOverlay}>
           <View style={styles.modalCard}>

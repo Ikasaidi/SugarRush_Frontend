@@ -43,12 +43,11 @@ export default function NotificationsScreen() {
         showsVerticalScrollIndicator={false}
       >
 
-        {/* CARD */}
         <View style={styles.cardPremium}>
 
           <Text style={styles.sectionTitle}>Général</Text>
 
-          {/* EMAIL */}
+
           <View style={styles.itemRow}>
             <View style={styles.itemLeft}>
               <View style={styles.iconBox}>
@@ -65,7 +64,6 @@ export default function NotificationsScreen() {
             />
           </View>
 
-          {/* PUSH */}
           <View style={styles.itemRow}>
             <View style={styles.itemLeft}>
               <View style={styles.iconBox}>
@@ -81,7 +79,6 @@ export default function NotificationsScreen() {
             />
           </View>
 
-          {/* PROMO */}
           <View style={styles.itemRow}>
             <View style={styles.itemLeft}>
               <View style={styles.iconBox}>
