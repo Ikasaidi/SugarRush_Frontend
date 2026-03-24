@@ -9,7 +9,6 @@ export default function TicketsScreen() {
   return (
     <View style={styles.container}>
 
-      {/* HEADER */}
       <LinearGradient
         colors={["#FF8FB3", "#EC6A8E"]}
         style={styles.headerTickets}
@@ -18,7 +17,6 @@ export default function TicketsScreen() {
         <Text style={styles.subtitleTickets}>0 billet disponible</Text>
       </LinearGradient>
 
-      {/* EMPTY STATE */}
       <View style={styles.ticketCard}>
 
         <Ionicons name="ticket-outline" size={40} color="#C7C7C7" />

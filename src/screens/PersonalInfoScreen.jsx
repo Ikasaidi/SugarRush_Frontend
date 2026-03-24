@@ -24,7 +24,6 @@ export default function PersonalInfoScreen() {
   return (
     <View style={styles.container}>
 
-      {/* HEADER */}
       <LinearGradient
         colors={["#FF8FB3", "#EC6A8E"]}
         style={styles.headerClean}
@@ -40,13 +39,11 @@ export default function PersonalInfoScreen() {
         <Text style={styles.subtitle}>Informations personnelles</Text>
       </LinearGradient>
 
-      {/* CONTENT */}
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
       >
 
-        {/* CARD */}
         <View style={styles.cardClean}>
 
           <View style={styles.inputRow}>
@@ -101,7 +98,6 @@ export default function PersonalInfoScreen() {
 
         </View>
 
-        {/* BUTTON */}
         <View style={styles.btnContainer}>
           <TouchableOpacity>
             <LinearGradient
