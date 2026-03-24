@@ -393,6 +393,15 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         textAlign: "center",
     },
+    headerTickets: {
+        paddingTop: 60,
+        paddingBottom: 40,
+        paddingHorizontal: 20,
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
+    },
+
+   
 });
 
 export default styles;
