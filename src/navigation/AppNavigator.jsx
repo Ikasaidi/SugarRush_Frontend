@@ -8,6 +8,8 @@ import AuthContext from '../context/AuthContext';
 import PersonalInfoScreen from "../screens/PersonalInfoScreen";
 import NotificationsScreen from "../screens/NotificationsScreen";
 import PaymentScreen from "../screens/PaymentScreen";
+import PurchaseScreen from "../screens/PurchaseScreen";
+import ScheduleScreen from '../screens/ScheduleScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,11 +25,11 @@ export default function AppNavigator() {
   return (
     <AuthContext.Provider value={authContext}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        
+
         {isLoggedIn ? (
           <>
             <Stack.Screen name="Main" component={MainTabs} />
-
+            <Stack.Screen name="Purchase" component={ScheduleScreen} />
             <Stack.Screen name="PersonalInfo" component={PersonalInfoScreen} />
             <Stack.Screen name="Notifications" component={NotificationsScreen} />
             <Stack.Screen name="Payment" component={PaymentScreen} />
