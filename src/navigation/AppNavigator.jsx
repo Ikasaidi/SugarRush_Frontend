@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { ActivityIndicator, View } from 'react-native';
+
+import AuthContext, { AuthProvider } from '../context/AuthContext';
 
 import AuthNavigator from './AuthNavigator';
 import MainTabs from './MainTabs';
-import AuthContext from '../context/AuthContext';
 
 import PersonalInfoScreen from "../screens/PersonalInfoScreen";
 import NotificationsScreen from "../screens/NotificationsScreen";
@@ -11,32 +13,38 @@ import PaymentScreen from "../screens/PaymentScreen";
 
 const Stack = createNativeStackNavigator();
 
-export default function AppNavigator() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+function Navigation() {
+  const { isLoggedIn, loading } = useContext(AuthContext);
 
-  const authContext = {
-    isLoggedIn,
-    login: () => setIsLoggedIn(true),
-    logout: () => setIsLoggedIn(false),
-  };
+  // Show loading spinner while checking auth state
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#FF8FB3" />
+      </View>
+    );
+  }
 
   return (
-    <AuthContext.Provider value={authContext}>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        
-        {isLoggedIn ? (
-          <>
-            <Stack.Screen name="Main" component={MainTabs} />
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {isLoggedIn ? (
+        <>
+          <Stack.Screen name="Main" component={MainTabs} />
+          <Stack.Screen name="PersonalInfo" component={PersonalInfoScreen} />
+          <Stack.Screen name="Notifications" component={NotificationsScreen} />
+          <Stack.Screen name="Payment" component={PaymentScreen} />
+        </>
+      ) : (
+        <Stack.Screen name="Auth" component={AuthNavigator} />
+      )}
+    </Stack.Navigator>
+  );
+}
 
-            <Stack.Screen name="PersonalInfo" component={PersonalInfoScreen} />
-            <Stack.Screen name="Notifications" component={NotificationsScreen} />
-            <Stack.Screen name="Payment" component={PaymentScreen} />
-          </>
-        ) : (
-          <Stack.Screen name="Auth" component={AuthNavigator} />
-        )}
-
-      </Stack.Navigator>
-    </AuthContext.Provider>
+export default function AppNavigator() {
+  return (
+    <AuthProvider>
+      <Navigation />
+    </AuthProvider>
   );
 }
