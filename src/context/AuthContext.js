@@ -1,5 +1,5 @@
-import React, { createContext, useState } from 'react';
-import API from '../services/api';
+import React, { createContext, useState } from "react";
+import API from "../services/api";
 
 const AuthContext = createContext();
 
@@ -14,17 +14,17 @@ export const AuthProvider = ({ children }) => {
   // =========================================================
   const register = async (data) => {
     try {
-      const res = await API.post('/auth/register', {
-        username: data.username,
-        email: data.email,
-        password: data.password,
-        user_type: data.user_type || 'student',
+      const res = await API.post("/auth/register", {
+        username: data.username.trim(),
+        email: data.email.trim().toLowerCase(),
+        password: data.password.trim(),
+        user_type: data.user_type || "student",
       });
 
-      console.log('REGISTER SUCCESS:', res.data);
+      console.log("REGISTER SUCCESS:", res.data);
       return res.data;
     } catch (err) {
-      console.log('REGISTER ERROR:', err.response?.data || err.message);
+      console.log("REGISTER ERROR:", err.response?.data || err.message);
       throw err;
     }
   };
@@ -35,9 +35,9 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       setLoading(true);
-      const res = await API.post('/auth/login', {
-        email,
-        password,
+      const res = await API.post("/auth/login", {
+        email: email.trim().toLowerCase(),
+        password: password.trim(),
       });
 
       const { token, user } = res.data;
@@ -48,12 +48,12 @@ export const AuthProvider = ({ children }) => {
       setIsLoggedIn(true);
 
       // Set auth header for future requests
-      API.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      API.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-      console.log('LOGIN SUCCESS:', res.data);
+      console.log("LOGIN SUCCESS:", res.data);
       return res.data;
     } catch (err) {
-      console.log('LOGIN ERROR:', err.response?.data || err.message);
+      console.log("LOGIN ERROR:", err.response?.data || err.message);
       throw err;
     } finally {
       setLoading(false);
@@ -68,10 +68,10 @@ export const AuthProvider = ({ children }) => {
       setToken(null);
       setUser(null);
       setIsLoggedIn(false);
-      delete API.defaults.headers.common['Authorization'];
-      console.log('LOGOUT SUCCESS');
+      delete API.defaults.headers.common["Authorization"];
+      console.log("LOGOUT SUCCESS");
     } catch (err) {
-      console.error('LOGOUT ERROR:', err);
+      console.error("LOGOUT ERROR:", err);
     }
   };
 
