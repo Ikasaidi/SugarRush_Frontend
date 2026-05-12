@@ -45,10 +45,10 @@ export default function QRScreen() {
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={["#FF8FB3", "#EC6A8E"]}
+        colors={["#C05A86", "#FF79A8"]}
         style={styles.headerTickets}
       >
-        <Text style={styles.titleTickets}>Mon QR Code</Text>
+        <Text style={styles.titleTickets}>QR CODE</Text>
         <Text style={styles.subtitleTickets}>
           Présentez ce code au ChibiScan
         </Text>

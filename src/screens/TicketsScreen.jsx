@@ -10,7 +10,7 @@ export default function TicketsScreen() {
     <View style={styles.container}>
 
       <LinearGradient
-        colors={["#FF8FB3", "#EC6A8E"]}
+        colors={["#C05A86", "#FF79A8"]}
         style={styles.headerTickets}
       >
         <Text style={styles.titleTickets}>Mes billets</Text>

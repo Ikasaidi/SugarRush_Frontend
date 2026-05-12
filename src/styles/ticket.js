@@ -4,13 +4,19 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
 
     titleTickets: {
-        color: "#fff",
-        marginTop: 40,
-        fontSize: 20,
-        fontWeight: "600",
-        marginLeft: 30,
+         color: "#FFFFFF",
+    fontSize: 22,
+    fontWeight: "700",
+    marginBottom: 16,
 
     },
+     headerTickets: {
+        paddingTop: 22,
+        paddingHorizontal: 14,
+        paddingBottom: 32,
+        borderBottomLeftRadius: 22,
+        borderBottomRightRadius: 22,
+    }, 
 
     subtitleTickets: {
         color: "#fff",
