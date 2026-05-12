@@ -15,15 +15,12 @@ export default function SignupScreen() {
   const { register, login } = useContext(AuthContext);
   const navigation = useNavigation();
 
-  // STATE
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // 🔥 SIGNUP HANDLER CLEAN
   const handleSignup = async () => {
-    // ✅ validation front (évite appels inutiles)
     if (!username || !email || !password) {
       return Alert.alert("Erreur", "Tous les champs sont requis");
     }
@@ -31,31 +28,36 @@ export default function SignupScreen() {
     try {
       setLoading(true);
 
-      console.log("SIGNUP DATA:", { username, email, password });
-
-      // 1. REGISTER
-      await register({
+      const signupData = {
         username: username.trim(),
-        email: email.trim(),
+        email: email.trim().toLowerCase(),
         password: password.trim(),
         user_type: "student",
-      });
+      };
 
-      console.log("REGISTER SUCCESS");
+      console.log("🚀 SIGNUP DATA SENT:", signupData);
 
-      // 2. LOGIN seulement si register OK
-      await login(email.trim(), password.trim());
+      // 1. Inscription
+      await register(signupData);
+
+      console.log("✅ REGISTER SUCCESS");
+
+      // 2. Connexion automatique
+      await login(email.trim().toLowerCase(), password.trim());
+
+      console.log("✅ AUTO-LOGIN SUCCESS");
+      // navigation.navigate("Home"); // Décommente quand tu auras la route
 
     } catch (error) {
-      console.log("SIGNUP ERROR:", error?.response?.data || error.message);
+      console.error("🔥 FULL SIGNUP ERROR:", error);
+      console.error("Response:", error?.response?.data);
 
-      // 🔥 message backend plus précis si dispo
       const message =
         error?.response?.data?.message ||
-        "Inscription échouée. Vérifie les champs.";
+        error?.message ||
+        "Inscription échouée. Vérifie tes informations.";
 
-      Alert.alert("Erreur", message);
-
+      Alert.alert("Erreur d'inscription", message);
     } finally {
       setLoading(false);
     }
@@ -64,13 +66,11 @@ export default function SignupScreen() {
   return (
     <LinearGradient colors={["#FF8FB3", "#EC6A8E"]} style={styles.background}>
       <View style={styles.card}>
-
         <LogoCircle />
 
         <Text style={styles.title}>Candy Train</Text>
         <Text style={styles.subtitle}>Create your account</Text>
 
-        {/* INPUTS CONNECTÉS */}
         <IconInput
           icon="person-outline"
           placeholder="Username"
@@ -93,28 +93,20 @@ export default function SignupScreen() {
           onChangeText={setPassword}
         />
 
-        {/* LOADING STATE */}
         {loading ? (
           <ActivityIndicator size="large" color="#fff" />
         ) : (
-          <GradientButton
-            title="Create my account"
-            onPress={handleSignup}
-          />
+          <GradientButton title="Create my account" onPress={handleSignup} />
         )}
 
         <Text style={styles.footer}>
           Already have an account?{" "}
-          <Text
-            style={styles.link}
-            onPress={() => navigation.navigate("Login")}
-          >
+          <Text style={styles.link} onPress={() => navigation.navigate("Login")}>
             Log in
           </Text>
         </Text>
 
         <PageDots />
-
       </View>
     </LinearGradient>
   );
