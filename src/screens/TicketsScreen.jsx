@@ -4,11 +4,13 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 
 import styles from "../styles/ticket.js";
+import { useCards } from "../context/CardContext";
 
 const ticketTypes = [
   {
@@ -29,35 +31,56 @@ const ticketTypes = [
     id: "first",
     title: "Première Classe",
     subtitle: "Billet première classe",
-    price:  104.50,
+    price: 104.5,
     color: "#B85D83",
   },
 ];
 
 export default function TicketsScreen({ navigation }) {
+  const { cards } = useCards();
+
   const [selectedTicket, setSelectedTicket] = useState(ticketTypes[0]);
   const [quantity, setQuantity] = useState(1);
   const [tickets, setTickets] = useState([]);
+  const [selectedCard, setSelectedCard] = useState(null);
 
   const total = selectedTicket.price * quantity;
 
   const handleBuy = () => {
+    if (cards.length === 0) {
+      Alert.alert(
+        "Aucune carte",
+        "Désolé, vous devez ajouter une carte dans votre mode de paiement."
+      );
+      return;
+    }
+
+    if (!selectedCard) {
+      Alert.alert(
+        "Mode de paiement",
+        "Veuillez choisir une carte pour payer."
+      );
+      return;
+    }
+
     const newTicket = {
       id: Date.now().toString(),
       type: selectedTicket.title,
       total,
+      quantity,
       departure: "Bubblegum",
       arrival: "Candyland",
       date: "12/05/2026 - 08:30",
       status: "Valide",
+      paymentCard: selectedCard.number,
     };
 
     setTickets([...tickets, newTicket]);
+    setQuantity(1);
   };
 
   return (
     <ScrollView style={styles.container}>
-
       <LinearGradient
         colors={["#C05A86", "#FF79A8"]}
         style={styles.headerTickets}
@@ -69,87 +92,7 @@ export default function TicketsScreen({ navigation }) {
         </Text>
       </LinearGradient>
 
-      <Text style={styles.sectionTitle}>Type de billet</Text>
-
-      {ticketTypes.map((ticket) => (
-        <TouchableOpacity
-          key={ticket.id}
-          style={[
-            styles.optionCard,
-            selectedTicket.id === ticket.id && styles.selectedCard,
-          ]}
-          onPress={() => setSelectedTicket(ticket)}
-        >
-          <View
-            style={[
-              styles.circle,
-              { backgroundColor: ticket.color },
-            ]}
-          >
-            {selectedTicket.id === ticket.id && (
-              <Ionicons name="checkmark" size={18} color="white" />
-            )}
-          </View>
-
-          <View style={{ flex: 1, marginLeft: 12 }}>
-            <Text style={styles.optionTitle}>{ticket.title}</Text>
-            <Text style={styles.optionSubtitle}>
-              {ticket.subtitle}
-            </Text>
-          </View>
-
-          <Text style={styles.optionPrice}>
-            {ticket.price.toFixed(2)}$
-          </Text>
-        </TouchableOpacity>
-      ))}
-
-      <View style={styles.quantityCard}>
-        <Text style={styles.sectionTitle}>Quantité</Text>
-
-        <View style={styles.quantityRow}>
-          <TouchableOpacity
-            style={styles.roundButton}
-            onPress={() =>
-              quantity > 1 && setQuantity(quantity - 1)
-            }
-          >
-            <Text style={styles.buttonText}>−</Text>
-          </TouchableOpacity>
-
-          <Text style={styles.quantityText}>{quantity}</Text>
-
-          <TouchableOpacity
-            style={styles.roundButton}
-            onPress={() => setQuantity(quantity + 1)}
-          >
-            <Text style={styles.buttonText}>+</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <View style={styles.totalCard}>
-        <Text style={styles.totalLabel}>Total</Text>
-
-        <Text style={styles.totalPrice}>
-          {total.toFixed(2)}$
-        </Text>
-      </View>
-
-      <TouchableOpacity
-        style={styles.payButton}
-        onPress={handleBuy}
-      >
-        <Ionicons
-          name="card-outline"
-          size={16}
-          color="#0D2B3E"
-        />
-
-        <Text style={styles.payText}>
-          Payer {total.toFixed(2)}$
-        </Text>
-      </TouchableOpacity>
+      {/* MES BILLETS */}
 
       {tickets.length === 0 ? (
         <View style={styles.ticketCard}>
@@ -242,6 +185,185 @@ export default function TicketsScreen({ navigation }) {
           </TouchableOpacity>
         ))
       )}
+
+      {/* ACHAT */}
+
+      <Text style={styles.sectionTitle}>
+        Type de billet
+      </Text>
+
+      {ticketTypes.map((ticket) => (
+        <TouchableOpacity
+          key={ticket.id}
+          style={[
+            styles.optionCard,
+            selectedTicket.id === ticket.id &&
+              styles.selectedCard,
+          ]}
+          onPress={() => setSelectedTicket(ticket)}
+        >
+          <View
+            style={[
+              styles.circle,
+              { backgroundColor: ticket.color },
+            ]}
+          >
+            {selectedTicket.id === ticket.id && (
+              <Ionicons
+                name="checkmark"
+                size={18}
+                color="white"
+              />
+            )}
+          </View>
+
+          <View style={{ flex: 1, marginLeft: 12 }}>
+            <Text style={styles.optionTitle}>
+              {ticket.title}
+            </Text>
+
+            <Text style={styles.optionSubtitle}>
+              {ticket.subtitle}
+            </Text>
+          </View>
+
+          <Text style={styles.optionPrice}>
+            {ticket.price.toFixed(2)}$
+          </Text>
+        </TouchableOpacity>
+      ))}
+
+      <View style={styles.quantityCard}>
+        <Text style={styles.sectionTitle}>
+          Quantité
+        </Text>
+
+        <View style={styles.quantityRow}>
+          <TouchableOpacity
+            style={styles.roundButton}
+            onPress={() =>
+              quantity > 1 &&
+              setQuantity(quantity - 1)
+            }
+          >
+            <Text style={styles.buttonText}>−</Text>
+          </TouchableOpacity>
+
+          <Text style={styles.quantityText}>
+            {quantity}
+          </Text>
+
+          <TouchableOpacity
+            style={styles.roundButton}
+            onPress={() =>
+              setQuantity(quantity + 1)
+            }
+          >
+            <Text style={styles.buttonText}>+</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <View style={styles.totalCard}>
+        <Text style={styles.totalLabel}>Total</Text>
+
+        <Text style={styles.totalPrice}>
+          {total.toFixed(2)}$
+        </Text>
+      </View>
+
+      <Text style={styles.sectionTitle}>
+        Mode de paiement
+      </Text>
+
+      {cards.length === 0 ? (
+        <View style={styles.noCardBox}>
+          <View style={styles.noCardIconBox}>
+            <Ionicons
+              name="card-outline"
+              size={22}
+              color="#D85C8A"
+            />
+          </View>
+
+          <View style={{ flex: 1 }}>
+            <Text style={styles.noCardTitle}>
+              Aucune carte enregistrée
+            </Text>
+
+            <Text style={styles.noCardText}>
+              Ajoutez une carte dans votre
+              mode de paiement pour continuer.
+            </Text>
+          </View>
+        </View>
+      ) : (
+        cards.map((card) => (
+          <TouchableOpacity
+            key={card.id}
+            style={[
+              styles.paymentCard,
+              selectedCard?.id === card.id &&
+                styles.selectedPaymentCard,
+            ]}
+            onPress={() => setSelectedCard(card)}
+          >
+            <View style={styles.paymentIconBox}>
+              <Ionicons
+                name="card"
+                size={22}
+                color="#D85C8A"
+              />
+            </View>
+
+            <View
+              style={{
+                flex: 1,
+                marginLeft: 12,
+              }}
+            >
+              <Text
+                style={styles.paymentCardNumber}
+              >
+                Carte ••••{" "}
+                {card.number
+                  .replace(/\D/g, "")
+                  .slice(-4)}
+              </Text>
+
+              <Text
+                style={styles.paymentCardName}
+              >
+                {card.name}
+              </Text>
+            </View>
+
+            {selectedCard?.id === card.id && (
+              <Ionicons
+                style={styles.paymentCheck}
+                name="checkmark-circle"
+                size={24}
+                color="#7DBA89"
+              />
+            )}
+          </TouchableOpacity>
+        ))
+      )}
+
+      <TouchableOpacity
+        style={styles.payButton}
+        onPress={handleBuy}
+      >
+        <Ionicons
+          name="card-outline"
+          size={16}
+          color="#0D2B3E"
+        />
+
+        <Text style={styles.payText}>
+          Payer {total.toFixed(2)}$
+        </Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }

@@ -400,8 +400,117 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
     },
+    cardTop: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
 
-   
+    chip: {
+        width: 45,
+        height: 32,
+        borderRadius: 8,
+        backgroundColor: "#F7D27A",
+        marginTop: 20,
+        marginBottom: 18,
+    },
+
+    cardLabel: {
+        color: "#fff",
+        fontSize: 9,
+        opacity: 0.8,
+        marginBottom: 4,
+    },
+
+    bankCardGradient: {
+        marginHorizontal: 24,
+        marginTop: 40,
+        borderRadius: 28,
+        padding: 24,
+        height: 215,
+        justifyContent: "space-between",
+        shadowColor: "#000",
+        shadowOpacity: 0.18,
+        shadowRadius: 18,
+        elevation: 8,
+    },
+
+    cardTop: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+
+    cardBrand: {
+        color: "#fff",
+        fontSize: 26,
+        fontWeight: "900",
+        letterSpacing: 1,
+    },
+
+    chip: {
+        width: 52,
+        height: 38,
+        borderRadius: 10,
+        backgroundColor: "#F6D36B",
+        marginTop: 8,
+    },
+
+    cardNumber: {
+        color: "#fff",
+        fontSize: 22,
+        fontWeight: "700",
+        letterSpacing: 2.5,
+        marginTop: 10,
+    },
+
+    cardBottom: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-end",
+        marginTop: 10,
+    },
+
+    cardLabel: {
+        color: "rgba(255,255,255,0.7)",
+        fontSize: 9,
+        fontWeight: "600",
+        marginBottom: 4,
+        letterSpacing: 1,
+    },
+
+    cardName: {
+        color: "#fff",
+        fontSize: 14,
+        fontWeight: "700",
+        letterSpacing: 1,
+    },
+    addCard: {
+        marginHorizontal: 24,
+        marginTop: 18,
+        backgroundColor: "#fff",
+        borderRadius: 18,
+        paddingVertical: 18,
+        width: "50%",
+        alignSelf: "center",
+
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+
+        shadowColor: "#000",
+        shadowOpacity: 0.06,
+        shadowRadius: 10,
+        elevation: 3,
+    },
+
+    addText: {
+        marginLeft: 8,
+        fontSize: 14,
+        fontWeight: "600",
+        color: "#444",
+    },
+
 });
 
 export default styles;

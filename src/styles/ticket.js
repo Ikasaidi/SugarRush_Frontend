@@ -259,5 +259,86 @@ const styles = StyleSheet.create({
         color: "#FF6F9F",
         fontSize: 12,
     },
+    paymentCard: {
+        backgroundColor: "#fff",
+        marginHorizontal: 12,
+        marginBottom: 12,
+        paddingVertical: 14,
+        paddingHorizontal: 16,
+        borderRadius: 16,
+
+        flexDirection: "row",
+        alignItems: "center",
+
+        shadowColor: "#000",
+        shadowOpacity: 0.08,
+        shadowRadius: 10,
+        elevation: 3,
+    },
+
+    selectedPaymentCard: {
+        borderWidth: 1.5,
+        borderColor: "#FF79A8",
+        backgroundColor: "#FFF7FA",
+    },
+
+    paymentIconBox: {
+        width: 42,
+        height: 42,
+        borderRadius: 14,
+        backgroundColor: "#FFE4EE",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    paymentCardNumber: {
+        fontSize: 15,
+        fontWeight: "800",
+        color: "#0D2B3E",
+    },
+
+    paymentCardName: {
+        fontSize: 12,
+        color: "#777",
+        marginTop: 4,
+    },
+
+    paymentCheck: {
+        marginLeft: "auto",
+    },
+    noCardBox: {
+        backgroundColor: "#FFF7FA",
+        marginHorizontal: 12,
+        marginBottom: 14,
+        padding: 14,
+        borderRadius: 16,
+        flexDirection: "row",
+        alignItems: "center",
+        borderWidth: 1,
+        borderColor: "#FFD6E4",
+    },
+
+    noCardIconBox: {
+        width: 42,
+        height: 42,
+        borderRadius: 14,
+        backgroundColor: "#FFE4EE",
+        justifyContent: "center",
+        alignItems: "center",
+        marginRight: 12,
+    },
+
+    noCardTitle: {
+        fontSize: 14,
+        fontWeight: "800",
+        color: "#0D2B3E",
+    },
+
+    noCardText: {
+        marginTop: 4,
+        color: "#D85C8A",
+        fontSize: 12,
+        lineHeight: 17,
+    },
 });
 export default styles;
