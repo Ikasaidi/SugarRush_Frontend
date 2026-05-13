@@ -10,6 +10,7 @@ import MainTabs from './MainTabs';
 import PersonalInfoScreen from "../screens/PersonalInfoScreen";
 import NotificationsScreen from "../screens/NotificationsScreen";
 import PaymentScreen from "../screens/PaymentScreen";
+import AdminPanelScreen from "../screens/AdminPanelScreen"; 
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +34,7 @@ function Navigation() {
           <Stack.Screen name="PersonalInfo" component={PersonalInfoScreen} />
           <Stack.Screen name="Notifications" component={NotificationsScreen} />
           <Stack.Screen name="Payment" component={PaymentScreen} />
+          <Stack.Screen name="AdminPanel" component={AdminPanelScreen} />
         </>
       ) : (
         <Stack.Screen name="Auth" component={AuthNavigator} />
