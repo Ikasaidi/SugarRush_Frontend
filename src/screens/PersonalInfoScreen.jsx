@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -9,21 +9,50 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import API from "../services/api";
+import AuthContext from "../context/AuthContext";
 
 import styles from "../styles/profile";
 
 export default function PersonalInfoScreen() {
   const navigation = useNavigation();
+  const { user, setUser } = useContext(AuthContext);
 
-  const [nom, setNom] = useState("");
-  const [prenom, setPrenom] = useState("");
-  const [telephone, setTelephone] = useState("");
-  const [email, setEmail] = useState("");
-  const [adresse, setAdresse] = useState("");
+  // Pré-remplissage
+  const [nom, setNom] = useState(user?.lname || "");
+  const [prenom, setPrenom] = useState(user?.fname || "");
+  const [telephone, setTelephone] = useState(user?.phone || "");
+  const [adresse, setAdresse] = useState(user?.address || "");
+
+  // Email affiché mais non modifiable
+  const email = user?.email || "";
+
+  // Message stylé en bas
+  const [message, setMessage] = useState("");
+  const [isError, setIsError] = useState(false);
+
+  const save = async () => {
+    try {
+      const res = await API.patch("/users/me", {
+        fname: prenom,
+        lname: nom,
+        phone: telephone,
+        address: adresse,
+      });
+
+      setUser(res.data);
+
+      setIsError(false);
+      setMessage("✔ Informations mises à jour avec succès !");
+    } catch (err) {
+      setIsError(true);
+      setMessage("✖ Une erreur est survenue. Réessaie plus tard.");
+      console.log("UPDATE ERROR:", err.response?.data || err.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
-
       <LinearGradient
         colors={["#FF8FB3", "#EC6A8E"]}
         style={styles.headerClean}
@@ -43,9 +72,7 @@ export default function PersonalInfoScreen() {
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
       >
-
         <View style={styles.cardClean}>
-
           <View style={styles.inputRow}>
             <Ionicons name="person-outline" size={16} color="#1a01019" />
             <TextInput
@@ -76,13 +103,14 @@ export default function PersonalInfoScreen() {
             />
           </View>
 
-          <View style={styles.inputRow}>
+          {/* EMAIL NON MODIFIABLE */}
+          <View style={[styles.inputRow, { opacity: 0.5 }]}>
             <Ionicons name="mail-outline" size={16} color="#1a0101" />
             <TextInput
               placeholder="Email"
               style={styles.inputText}
               value={email}
-              onChangeText={setEmail}
+              editable={false}
             />
           </View>
 
@@ -95,11 +123,25 @@ export default function PersonalInfoScreen() {
               onChangeText={setAdresse}
             />
           </View>
-
         </View>
 
+        {/* MESSAGE STYLÉ */}
+        {message !== "" && (
+          <Text
+            style={{
+              textAlign: "center",
+              marginTop: 10,
+              fontSize: 14,
+              fontWeight: "600",
+              color: isError ? "#ff4d6d" : "#EC6A8E",
+            }}
+          >
+            {message}
+          </Text>
+        )}
+
         <View style={styles.btnContainer}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={save}>
             <LinearGradient
               colors={["#FF8FB3", "#EC6A8E"]}
               style={styles.btnGradient}
@@ -108,7 +150,6 @@ export default function PersonalInfoScreen() {
             </LinearGradient>
           </TouchableOpacity>
         </View>
-
       </ScrollView>
     </View>
   );
