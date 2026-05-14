@@ -93,32 +93,24 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      setLoading(true);
-
+      // Don't set global loading - let component manage it
       const res = await API.post("/auth/login", {
         email: email.trim().toLowerCase(),
-
         password: password.trim(),
       });
 
       const { token, user } = res.data;
 
-      // SAVE TOKEN
       await TokenService.saveToken(token);
 
       setToken(token);
-
       setUser(user);
-
       setIsLoggedIn(true);
 
       return res.data;
     } catch (error) {
       console.log("LOGIN ERROR:", error?.response?.data || error.message);
-
       throw error;
-    } finally {
-      setLoading(false);
     }
   };
 
