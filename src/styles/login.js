@@ -85,6 +85,30 @@ const styles = StyleSheet.create({
     color: "#c46986", // rose
     fontWeight: "700", // gras
   },
+
+  errorBox: {
+    backgroundColor: "rgba(255,0,0,0.15)",
+    borderWidth: 1,
+    borderColor: "#ff4d4d",
+
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+
+    borderRadius: 12,
+
+    marginVertical: 12,
+    marginHorizontal: 20,
+
+    alignSelf: "stretch",
+  },
+
+  errorText: {
+    color: "#fff",
+    textAlign: "center",
+    fontSize: 14,
+    fontWeight: "600",
+    lineHeight: 20,
+  },
 });
 
 export default styles;
