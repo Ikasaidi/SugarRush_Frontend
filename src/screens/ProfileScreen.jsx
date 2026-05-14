@@ -1,106 +1,43 @@
+// screens/ProfileScreen.tsx
+
 import React, { useContext } from "react";
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
-import AuthContext from "../context/AuthContext";
 import { useNavigation } from "@react-navigation/native";
+
+import AuthContext from "../context/AuthContext";
 import styles from "../styles/profile";
 
 export default function ProfileScreen() {
   const { user, logout } = useContext(AuthContext);
+
   const navigation = useNavigation();
+  const isAdmin = user?.user_type === "admin";
 
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={{ paddingBottom: 40 }}
+      contentContainerStyle={{
+        paddingBottom: 40,
+      }}
       showsVerticalScrollIndicator={false}
     >
       {/* HEADER */}
+
       <LinearGradient colors={["#FF8FB3", "#EC6A8E"]} style={styles.header}>
         <View style={styles.avatar}>
           <Ionicons name="person-outline" size={40} color="#EC6A8E" />
         </View>
 
-        {/* 🔥 Infos du user */}
-        {/* 🔥 USER INFO CARD — STYLE PREMIUM */}
-        <View
-          style={{
-            marginHorizontal: 20,
-            marginTop: 15,
-            paddingVertical: 18,
-            paddingHorizontal: 80,
-            borderRadius: 20,
-            backgroundColor: "rgba(255, 143, 179, 0.20)", // rose translucide
-            borderWidth: 1,
-            borderColor: "rgba(255, 143, 179, 0.35)",
-            shadowColor: "#EC6A8E",
-            shadowOpacity: 0.15,
-            shadowRadius: 8,
-            elevation: 4,
-          }}
-        >
-          {/* Nom complet */}
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginBottom: 14,
-            }}
-          >
-            <Ionicons name="person-circle-outline" size={26} color="#EC6A8E" />
-            <Text
-              style={{
-                marginLeft: 12,
-                fontSize: 17,
-                fontWeight: "700",
-                color: "#2a2a2a",
-              }}
-            >
-              {user?.fname} {user?.lname}
-            </Text>
-          </View>
+        <Text style={{ fontSize: 18, fontWeight: "700", color: "#fff", marginTop: 8 }}>
+          {user?.fname} {user?.lname}
+        </Text>
 
-          {/* Email */}
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginBottom: 14,
-            }}
-          >
-            <Ionicons name="mail-outline" size={22} color="#EC6A8E" />
-            <Text style={{ marginLeft: 12, fontSize: 15, color: "#444" }}>
-              {user?.email}
-            </Text>
-          </View>
+        <Text style={styles.email}>{user?.email || "Utilisateur"}</Text>
 
-          {/* Téléphone */}
-          {user?.phone ? (
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginBottom: 14,
-              }}
-            >
-              <Ionicons name="call-outline" size={22} color="#EC6A8E" />
-              <Text style={{ marginLeft: 12, fontSize: 15, color: "#444" }}>
-                {user.phone}
-              </Text>
-            </View>
-          ) : null}
-
-          {/* Adresse */}
-          {user?.address ? (
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Ionicons name="location-outline" size={22} color="#EC6A8E" />
-              <Text style={{ marginLeft: 12, fontSize: 15, color: "#444" }}>
-                {user.address}
-              </Text>
-            </View>
-          ) : null}
-        </View>
+        {/* QR */}
 
         <TouchableOpacity
           style={styles.qrCard}
@@ -113,6 +50,7 @@ export default function ProfileScreen() {
 
           <View style={{ flex: 1 }}>
             <Text style={styles.qrTitle}>Mon QR Code</Text>
+
             <Text style={styles.qrSubtitle}>Afficher mon code personnel</Text>
           </View>
 
@@ -121,21 +59,29 @@ export default function ProfileScreen() {
       </LinearGradient>
 
       {/* WALLET */}
+
       <View style={styles.card}>
         <View style={styles.cardHeader}>
           <Ionicons name="wallet-outline" size={20} color="#EC6A8E" />
+
           <Text style={styles.cardTitle}>Mon portefeuille</Text>
         </View>
 
         <View style={styles.walletRow}>
           <View style={[styles.ticketBox, styles.freeBox]}>
             <Text style={styles.ticketLabel}>Billets gratuits</Text>
-            <Text style={styles.ticketNumber}>2</Text>
+
+            <Text style={styles.ticketNumber}>
+              {user?.wallet?.free_ticket_balance || 0}
+            </Text>
           </View>
 
           <View style={[styles.ticketBox, styles.paidBox]}>
             <Text style={styles.ticketLabel}>Billets payés</Text>
-            <Text style={styles.ticketNumber}>0</Text>
+
+            <Text style={styles.ticketNumber}>
+              {user?.wallet?.paid_ticket_balance || 0}
+            </Text>
           </View>
         </View>
 
@@ -143,36 +89,87 @@ export default function ProfileScreen() {
 
         <View style={styles.totalRow}>
           <Text style={styles.totalText}>Total dépensé</Text>
-          <Text style={styles.totalAmount}>0.00€</Text>
+
+          <Text style={styles.totalAmount}>
+            {(user?.stats?.total_spent || 0).toFixed(2)}€
+          </Text>
         </View>
       </View>
 
-      {/* HISTORY */}
+      {/* PURCHASE HISTORY */}
+
       <View style={styles.card}>
         <View style={styles.cardHeader}>
           <Ionicons name="time-outline" size={20} color="#EC6A8E" />
+
           <Text style={styles.cardTitle}>Historique des achats</Text>
         </View>
 
-        <Text style={styles.emptyText}>Aucun achat pour le moment</Text>
+        {user?.purchases?.length > 0 ? (
+          user.purchases.map((purchase) => (
+            <View
+              key={purchase._id}
+              style={{
+                paddingVertical: 12,
+                borderBottomWidth: 1,
+                borderBottomColor: "#eee",
+              }}
+            >
+              <Text
+                style={{
+                  fontWeight: "600",
+                  color: "#333",
+                }}
+              >
+                {purchase.quantity} billet(s)
+              </Text>
+
+              <Text
+                style={{
+                  color: "#666",
+                  marginTop: 4,
+                }}
+              >
+                {purchase.total_amount}
+                {purchase.currency}
+              </Text>
+
+              <Text
+                style={{
+                  color: "#999",
+                  marginTop: 2,
+                }}
+              >
+                {new Date(purchase.created_at).toLocaleDateString()}
+              </Text>
+            </View>
+          ))
+        ) : (
+          <Text style={styles.emptyText}>Aucun achat pour le moment</Text>
+        )}
       </View>
 
       {/* SETTINGS */}
+
       <View style={styles.card}>
         <Text style={styles.settingsTitle}>Paramètres du compte</Text>
 
-        <TouchableOpacity
-          style={styles.settingItem}
-          onPress={() => navigation.navigate("PersonalInfo")}
-        >
-          <View style={styles.settingLeft}>
-            <View style={styles.settingIcon}>
-              <Ionicons name="person-outline" size={18} color="#EC6A8E" />
+        {!isAdmin ? (
+          <TouchableOpacity
+            style={styles.settingItem}
+            onPress={() => navigation.navigate("PersonalInfo")}
+          >
+            <View style={styles.settingLeft}>
+              <View style={styles.settingIcon}>
+                <Ionicons name="person-outline" size={18} color="#EC6A8E" />
+              </View>
+
+              <Text style={styles.settingText}>Informations personnelles</Text>
             </View>
-            <Text style={styles.settingText}>Informations personnelles</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={18} color="#999" />
-        </TouchableOpacity>
+
+            <Ionicons name="chevron-forward" size={18} color="#999" />
+          </TouchableOpacity>
+        ) : null}
 
         <TouchableOpacity
           style={styles.settingItem}
@@ -182,8 +179,10 @@ export default function ProfileScreen() {
             <View style={styles.settingIcon}>
               <Ionicons name="mail-outline" size={18} color="#EC6A8E" />
             </View>
+
             <Text style={styles.settingText}>Email et notifications</Text>
           </View>
+
           <Ionicons name="chevron-forward" size={18} color="#999" />
         </TouchableOpacity>
 
@@ -195,31 +194,36 @@ export default function ProfileScreen() {
             <View style={styles.settingIcon}>
               <Ionicons name="card-outline" size={18} color="#EC6A8E" />
             </View>
+
             <Text style={styles.settingText}>Moyens de paiement</Text>
           </View>
+
           <Ionicons name="chevron-forward" size={18} color="#999" />
         </TouchableOpacity>
 
-        {/* ADMIN PANEL */}
-        {/* {user?.user_type === "admin" && ( */}
-        <TouchableOpacity
-          style={styles.settingItem}
-          onPress={() => navigation.navigate("AdminPanel")}
-        >
-          <View style={styles.settingLeft}>
-            <View style={styles.settingIcon}>
-              <Ionicons name="speedometer-outline" size={18} color="#EC6A8E" />
+        {isAdmin ? (
+          <TouchableOpacity
+            style={styles.settingItem}
+            onPress={() => navigation.navigate("AdminPanel")}
+          >
+            <View style={styles.settingLeft}>
+              <View style={styles.settingIcon}>
+                <Ionicons name="speedometer-outline" size={18} color="#EC6A8E" />
+              </View>
+
+              <Text style={styles.settingText}>Admin</Text>
             </View>
-            <Text style={styles.settingText}>Admin</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={18} color="#999" />
-        </TouchableOpacity>
-        {/* )} */}
+
+            <Ionicons name="chevron-forward" size={18} color="#999" />
+          </TouchableOpacity>
+        ) : null}
       </View>
 
       {/* LOGOUT */}
+
       <TouchableOpacity style={styles.logoutButton} onPress={logout}>
         <Ionicons name="log-out-outline" size={18} color="#fff" />
+
         <Text style={styles.logoutText}>Se déconnecter</Text>
       </TouchableOpacity>
     </ScrollView>
