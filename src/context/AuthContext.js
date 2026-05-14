@@ -21,7 +21,13 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUserWallet = async (userData) => {
     try {
-      const walletRes = await API.get("/wallet/me");
+      // Ensure we send the saved token when calling the wallet endpoint
+      const savedToken = await TokenService.getToken();
+      const walletRes = await API.get("/wallet/me", {
+        headers: savedToken ? { Authorization: `Bearer ${savedToken}` } : {},
+      });
+
+      console.log("AuthContext: fetchUserWallet response:", walletRes?.data?.wallet ? 'ok' : 'no-wallet');
 
       if (walletRes?.data?.wallet) {
         return {

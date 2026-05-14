@@ -1,20 +1,66 @@
-import React, { useContext } from "react";
-import { View, Text } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 
 import styles from "../styles/ticket.js";
-import AuthContext from "../context/AuthContext";
+import { useCards } from "../context/CardContext";
 
-export default function TicketsScreen() {
-  const { user } = useContext(AuthContext);
+const ticketTypes = [
+  {
+    id: "standard",
+    title: "Standard",
+    subtitle: "Billet régulier pour un trajet",
+    price: 34.25,
+    color: "#C8DDB5",
+  },
+];
 
-  const freeTickets = user?.wallet?.free_ticket_balance || 0;
-  const paidTickets = user?.wallet?.paid_ticket_balance || 0;
-  const totalSpent = user?.stats?.total_spent || 0;
+export default function TicketsScreen({ navigation }) {
+  const { cards } = useCards();
 
-  return (
-    <View style={styles.container}>
+  const [selectedTicket] = useState(ticketTypes[0]);
+  const [quantity, setQuantity] = useState(1);
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [toast, setToast] = useState(null);
+
+  const total = selectedTicket.price * quantity;
+
+  const showToast = (message, type = "info") => {
+    setToast({ message, type });
+
+    setTimeout(() => {
+      setToast(null);
+    }, 2500);
+  };
+
+  const handleBuy = () => {
+    if (cards.length === 0) {
+      navigation.navigate("Payment");
+      return;
+    }
+
+    if (!selectedCard) {
+      showToast(
+        "Choisissez une carte pour payer.",
+        "warning"
+      );
+      return;
+    }
+
+    showToast(
+      `${quantity} billet(s) acheté(s) avec succès.`,
+      "success"
+    );
+
+    setQuantity(1);
+  };
 
   return (
     <ScrollView
@@ -25,8 +71,10 @@ export default function TicketsScreen() {
         colors={["#C05A86", "#FF79A8"]}
         style={styles.headerTickets}
       >
-        <Text style={styles.titleTickets}>Mes billets</Text>
-        <Text style={styles.subtitleTickets}>{freeTickets} billet{freeTickets > 1 ? "s" : ""} disponible{freeTickets > 1 ? "s" : ""} • {paidTickets} payé{paidTickets > 1 ? "s" : ""}</Text>
+        <Text style={styles.titleTickets}>Achat de billets</Text>
+        <Text style={styles.subtitleTickets}>
+          Achetez vos billets avant votre passage
+        </Text>
       </LinearGradient>
 
       <View style={styles.ticketPreviewCard}>
@@ -42,17 +90,17 @@ export default function TicketsScreen() {
         </View>
       </View>
 
-        <Text style={styles.ticketTitle}>
-          {freeTickets > 0 ? `${freeTickets} billet${freeTickets > 1 ? "s" : ""}` : "Aucun billet pour le moment"}
-        </Text>
+      <Text style={styles.sectionTitle}>Type de billet</Text>
 
-        <Text style={{ marginTop: 8, color: "#777" }}>Billets payés : {paidTickets}</Text>
-
-        <Text style={{ marginTop: 8, color: "#777" }}>Total dépensé : {Number(totalSpent).toFixed(2)}€</Text>
-
-        <Text style={styles.ticketSubtitle}>
-          Achetez vos premiers billets dans l'onglet Horaires
-        </Text>
+      {ticketTypes.map((ticket) => (
+        <TouchableOpacity
+          key={ticket.id}
+          style={[styles.optionCard, styles.selectedCard]}
+          activeOpacity={0.85}
+        >
+          <View style={[styles.circle, { backgroundColor: ticket.color }]}>
+            <Ionicons name="checkmark" size={18} color="white" />
+          </View>
 
           <View style={{ flex: 1, marginLeft: 12 }}>
             <Text style={styles.optionTitle}>{ticket.title}</Text>
