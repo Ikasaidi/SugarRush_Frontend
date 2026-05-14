@@ -50,7 +50,7 @@ export default function QRScreen() {
       >
         <Text style={styles.titleTickets}>QR CODE</Text>
         <Text style={styles.subtitleTickets}>
-          Présentez ce code au ChibiScan
+          Présentez ce code au Sweet Shot
         </Text>
       </LinearGradient>
 
@@ -95,7 +95,7 @@ export default function QRScreen() {
 
           <Text style={{ marginTop: 10, color: "#777", textAlign: "center" }}>
             {qrUrl
-              ? "QR généré. Présentez-le au ChibiScan."
+              ? "QR généré. Présentez-le au Sweet Shot."
               : "Touchez le carré pour générer votre QR."}
           </Text>
 
@@ -123,7 +123,7 @@ export default function QRScreen() {
             <Text style={styles.qrInfoTitle}>Comment l'utiliser ?</Text>
 
             <Text style={styles.qrInfoText}>
-              1. Présentez ce QR code au ChibiScan
+              1. Présentez ce QR code au Sweet Shot
             </Text>
             <Text style={styles.qrInfoText}>
               2. Il sera scanné pour vérifier votre identité
