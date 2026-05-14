@@ -16,326 +16,203 @@ const ticketTypes = [
   {
     id: "standard",
     title: "Standard",
-    subtitle: "Billet standard",
+    subtitle: "Billet régulier pour un trajet",
     price: 34.25,
     color: "#C8DDB5",
-  },
-  {
-    id: "premium",
-    title: "Premium",
-    subtitle: "Billet premium",
-    price: 62.75,
-    color: "#FF7FA3",
-  },
-  {
-    id: "first",
-    title: "Première Classe",
-    subtitle: "Billet première classe",
-    price: 104.5,
-    color: "#B85D83",
   },
 ];
 
 export default function TicketsScreen({ navigation }) {
   const { cards } = useCards();
 
-  const [selectedTicket, setSelectedTicket] = useState(ticketTypes[0]);
+  const [selectedTicket] = useState(ticketTypes[0]);
   const [quantity, setQuantity] = useState(1);
-  const [tickets, setTickets] = useState([]);
   const [selectedCard, setSelectedCard] = useState(null);
+  const [toast, setToast] = useState(null);
 
   const total = selectedTicket.price * quantity;
 
+  const showToast = (message, type = "info") => {
+    setToast({ message, type });
+
+    setTimeout(() => {
+      setToast(null);
+    }, 2500);
+  };
+
   const handleBuy = () => {
     if (cards.length === 0) {
-      Alert.alert(
-        "Aucune carte",
-        "Désolé, vous devez ajouter une carte dans votre mode de paiement."
-      );
+      navigation.navigate("Payment");
       return;
     }
 
     if (!selectedCard) {
-      Alert.alert(
-        "Mode de paiement",
-        "Veuillez choisir une carte pour payer."
+      showToast(
+        "Choisissez une carte pour payer.",
+        "warning"
       );
       return;
     }
 
-    const newTicket = {
-      id: Date.now().toString(),
-      type: selectedTicket.title,
-      total,
-      quantity,
-      departure: "Bubblegum",
-      arrival: "Candyland",
-      date: "12/05/2026 - 08:30",
-      status: "Valide",
-      paymentCard: selectedCard.number,
-    };
+    showToast(
+      `${quantity} billet(s) acheté(s) avec succès.`,
+      "success"
+    );
 
-    setTickets([...tickets, newTicket]);
     setQuantity(1);
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      showsVerticalScrollIndicator={false}
+    >
       <LinearGradient
         colors={["#C05A86", "#FF79A8"]}
         style={styles.headerTickets}
       >
-        <Text style={styles.titleTickets}>Mes billets</Text>
-
+        <Text style={styles.titleTickets}>Achat de billets</Text>
         <Text style={styles.subtitleTickets}>
-          {tickets.length} billet disponible
+          Achetez vos billets avant votre passage
         </Text>
       </LinearGradient>
 
-      {/* MES BILLETS */}
+      <View style={styles.ticketPreviewCard}>
+        <View style={styles.ticketIconBox}>
+          <Ionicons name="ticket-outline" size={28} color="#C05A86" />
+        </View>
 
-      {tickets.length === 0 ? (
-        <View style={styles.ticketCard}>
-          <Ionicons
-            name="ticket-outline"
-            size={40}
-            color="#C7C7C7"
-          />
-
-          <Text style={styles.ticketTitle}>
-            Aucun billet pour le moment
-          </Text>
-
-          <Text style={styles.ticketSubtitle}>
-            Achetez vos premiers billets dans l'onglet Horaires
+        <View style={{ flex: 1 }}>
+          <Text style={styles.ticketPreviewTitle}>Billet Sugar-Pi</Text>
+          <Text style={styles.ticketPreviewText}>
+            Valide pour un trajet entre les stations Bubblegum et Candy Cloud.
           </Text>
         </View>
-      ) : (
-        tickets.map((ticket) => (
-          <TouchableOpacity
-            key={ticket.id}
-            style={styles.realTicket}
-            onPress={() =>
-              navigation.navigate("My QR", {
-                ticket,
-              })
-            }
-          >
-            <View style={styles.validBar}>
-              <Text style={styles.validText}>
-                ✓ {ticket.status}
-              </Text>
-            </View>
+      </View>
 
-            <View style={styles.ticketContent}>
-              <View>
-                <Text style={styles.smallLabel}>Départ</Text>
-
-                <Text style={styles.boldText}>
-                  {ticket.departure}
-                </Text>
-              </View>
-
-              <Ionicons
-                name="ticket"
-                size={28}
-                color="#D85C8A"
-              />
-
-              <View>
-                <Text style={styles.smallLabel}>Arrivée</Text>
-
-                <Text style={styles.boldText}>
-                  {ticket.arrival}
-                </Text>
-              </View>
-            </View>
-
-            <View style={styles.bottomRow}>
-              <View>
-                <Text style={styles.smallLabel}>
-                  Date & Heure
-                </Text>
-
-                <Text style={styles.boldText}>
-                  {ticket.date}
-                </Text>
-              </View>
-
-              <View>
-                <Text style={styles.smallLabel}>Type</Text>
-
-                <Text style={styles.typeText}>
-                  {ticket.type}
-                </Text>
-              </View>
-            </View>
-
-            <View style={styles.qrRow}>
-              <Ionicons
-                name="qr-code-outline"
-                size={16}
-                color="#FF6F9F"
-              />
-
-              <Text style={styles.qrText}>
-                Appuyez pour voir le QR code
-              </Text>
-            </View>
-          </TouchableOpacity>
-        ))
-      )}
-
-      {/* ACHAT */}
-
-      <Text style={styles.sectionTitle}>
-        Type de billet
-      </Text>
+      <Text style={styles.sectionTitle}>Type de billet</Text>
 
       {ticketTypes.map((ticket) => (
         <TouchableOpacity
           key={ticket.id}
-          style={[
-            styles.optionCard,
-            selectedTicket.id === ticket.id &&
-              styles.selectedCard,
-          ]}
-          onPress={() => setSelectedTicket(ticket)}
+          style={[styles.optionCard, styles.selectedCard]}
+          activeOpacity={0.85}
         >
-          <View
-            style={[
-              styles.circle,
-              { backgroundColor: ticket.color },
-            ]}
-          >
-            {selectedTicket.id === ticket.id && (
-              <Ionicons
-                name="checkmark"
-                size={18}
-                color="white"
-              />
-            )}
+          <View style={[styles.circle, { backgroundColor: ticket.color }]}>
+            <Ionicons name="checkmark" size={18} color="white" />
           </View>
 
           <View style={{ flex: 1, marginLeft: 12 }}>
-            <Text style={styles.optionTitle}>
-              {ticket.title}
-            </Text>
-
-            <Text style={styles.optionSubtitle}>
-              {ticket.subtitle}
-            </Text>
+            <Text style={styles.optionTitle}>{ticket.title}</Text>
+            <Text style={styles.optionSubtitle}>{ticket.subtitle}</Text>
           </View>
 
-          <Text style={styles.optionPrice}>
-            {ticket.price.toFixed(2)}$
-          </Text>
+          <Text style={styles.optionPrice}>{ticket.price.toFixed(2)}$</Text>
         </TouchableOpacity>
       ))}
 
-      <View style={styles.quantityCard}>
-        <Text style={styles.sectionTitle}>
-          Quantité
-        </Text>
+      <View style={styles.infoRow}>
+        <View style={styles.infoBox}>
+          <Ionicons name="time-outline" size={20} color="#D85C8A" />
+          <Text style={styles.infoTitle}>Utilisation</Text>
+          <Text style={styles.infoText}>Valide pour 1 trajet </Text>
+        </View>
 
-        <View style={styles.quantityRow}>
+        <View style={styles.infoBox}>
+          <Ionicons name="qr-code-outline" size={20} color="#D85C8A" />
+          <Text style={styles.infoTitle}>Accès</Text>
+          <Text style={styles.infoText}>Scan à l'entrée de Candy Cloud</Text>
+        </View>
+      </View>
+
+      <View style={styles.quantityContainer}>
+        <View>
+          <Text style={styles.quantityLabel}>Quantité</Text>
+          <Text style={styles.quantitySubLabel}>Maximum 10 billets</Text>
+        </View>
+
+        <View style={styles.quantitySelector}>
           <TouchableOpacity
-            style={styles.roundButton}
-            onPress={() =>
-              quantity > 1 &&
-              setQuantity(quantity - 1)
-            }
+            style={[
+              styles.quantityButton,
+              quantity === 1 && styles.quantityButtonDisabled,
+            ]}
+            onPress={() => quantity > 1 && setQuantity(quantity - 1)}
+            activeOpacity={0.8}
           >
-            <Text style={styles.buttonText}>−</Text>
+            <Ionicons name="remove" size={18} color="#FFFFFF" />
           </TouchableOpacity>
 
-          <Text style={styles.quantityText}>
-            {quantity}
-          </Text>
+          <View style={styles.quantityMiddle}>
+            <Text style={styles.quantityValue}>{quantity}</Text>
+          </View>
 
           <TouchableOpacity
-            style={styles.roundButton}
-            onPress={() =>
-              setQuantity(quantity + 1)
-            }
+            style={[
+              styles.quantityButton,
+              quantity === 10 && styles.quantityButtonDisabled,
+            ]}
+            onPress={() => quantity < 10 && setQuantity(quantity + 1)}
+            activeOpacity={0.8}
           >
-            <Text style={styles.buttonText}>+</Text>
+            <Ionicons name="add" size={18} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
       </View>
 
       <View style={styles.totalCard}>
-        <Text style={styles.totalLabel}>Total</Text>
+        <View>
+          <Text style={styles.totalLabel}>Total à payer</Text>
+          <Text style={styles.totalSubLabel}>
+            {quantity} × {selectedTicket.price.toFixed(2)}$
+          </Text>
+        </View>
 
-        <Text style={styles.totalPrice}>
-          {total.toFixed(2)}$
-        </Text>
+        <Text style={styles.totalPrice}>{total.toFixed(2)}$</Text>
       </View>
 
-      <Text style={styles.sectionTitle}>
-        Mode de paiement
-      </Text>
+      <Text style={styles.sectionTitle}>Mode de paiement</Text>
 
       {cards.length === 0 ? (
-        <View style={styles.noCardBox}>
+        <TouchableOpacity
+          style={styles.noCardBox}
+          onPress={() => navigation.navigate("Payment")}
+          activeOpacity={0.85}
+        >
           <View style={styles.noCardIconBox}>
-            <Ionicons
-              name="card-outline"
-              size={22}
-              color="#D85C8A"
-            />
+            <Ionicons name="card-outline" size={22} color="#D85C8A" />
           </View>
 
           <View style={{ flex: 1 }}>
-            <Text style={styles.noCardTitle}>
-              Aucune carte enregistrée
-            </Text>
-
+            <Text style={styles.noCardTitle}>Aucune carte enregistrée</Text>
             <Text style={styles.noCardText}>
-              Ajoutez une carte dans votre
-              mode de paiement pour continuer.
+              Touchez ici pour ajouter une carte.
             </Text>
           </View>
-        </View>
+
+          <Ionicons name="chevron-forward" size={20} color="#D85C8A" />
+        </TouchableOpacity>
       ) : (
         cards.map((card) => (
           <TouchableOpacity
             key={card.id}
             style={[
               styles.paymentCard,
-              selectedCard?.id === card.id &&
-                styles.selectedPaymentCard,
+              selectedCard?.id === card.id && styles.selectedPaymentCard,
             ]}
             onPress={() => setSelectedCard(card)}
+            activeOpacity={0.85}
           >
             <View style={styles.paymentIconBox}>
-              <Ionicons
-                name="card"
-                size={22}
-                color="#D85C8A"
-              />
+              <Ionicons name="card" size={22} color="#D85C8A" />
             </View>
 
-            <View
-              style={{
-                flex: 1,
-                marginLeft: 12,
-              }}
-            >
-              <Text
-                style={styles.paymentCardNumber}
-              >
-                Carte ••••{" "}
-                {card.number
-                  .replace(/\D/g, "")
-                  .slice(-4)}
+            <View style={{ flex: 1, marginLeft: 12 }}>
+              <Text style={styles.paymentCardNumber}>
+                Carte •••• {card.number.replace(/\D/g, "").slice(-4)}
               </Text>
 
-              <Text
-                style={styles.paymentCardName}
-              >
-                {card.name}
-              </Text>
+              <Text style={styles.paymentCardName}>{card.name}</Text>
             </View>
 
             {selectedCard?.id === card.id && (
@@ -351,19 +228,46 @@ export default function TicketsScreen({ navigation }) {
       )}
 
       <TouchableOpacity
-        style={styles.payButton}
+        style={[
+          styles.payButton,
+          cards.length > 0 && !selectedCard && { opacity: 0.55 },
+        ]}
         onPress={handleBuy}
+        activeOpacity={0.85}
       >
-        <Ionicons
-          name="card-outline"
-          size={16}
-          color="#0D2B3E"
-        />
-
-        <Text style={styles.payText}>
-          Payer {total.toFixed(2)}$
-        </Text>
+        <Ionicons name="card-outline" size={16} color="#0D2B3E" />
+        <Text style={styles.payText}>Payer {total.toFixed(2)}$</Text>
       </TouchableOpacity>
+
+
+      {toast && (
+        <View
+          style={[
+            styles.toastBox,
+            toast.type === "success" &&
+              styles.toastSuccess,
+
+            toast.type === "warning" &&
+              styles.toastWarning,
+          ]}
+        >
+          <Ionicons
+            name={
+              toast.type === "success"
+                ? "checkmark-circle"
+                : "alert-circle"
+            }
+            size={18}
+            color="#fff"
+          />
+
+          <Text style={styles.toastText}>
+            {toast.message}
+          </Text>
+        </View>
+      )}
+
+      <View style={{ height: 30 }} />
     </ScrollView>
   );
 }

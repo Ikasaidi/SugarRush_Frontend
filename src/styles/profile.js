@@ -510,6 +510,156 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         color: "#444",
     },
+    emptyPaymentBox: {
+        backgroundColor: "#FFFFFF",
+        marginHorizontal: 18,
+        marginTop: 24,
+        padding: 26,
+        borderRadius: 22,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOpacity: 0.06,
+        shadowRadius: 8,
+        elevation: 3,
+        },
+
+        emptyPaymentIcon: {
+        width: 64,
+        height: 64,
+        borderRadius: 32,
+        backgroundColor: "#FFF1F6",
+        alignItems: "center",
+        justifyContent: "center",
+        marginBottom: 12,
+        },
+
+        emptyPaymentTitle: {
+        fontSize: 17,
+        fontWeight: "900",
+        color: "#0D2B3E",
+        },
+
+        emptyPaymentText: {
+        marginTop: 6,
+        color: "#777",
+        textAlign: "center",
+        fontSize: 13,
+        },
+
+        modalSubtitle: {
+        textAlign: "center",
+        color: "#777",
+        fontSize: 13,
+        marginTop: 4,
+        marginBottom: 16,
+        },
+
+        inputOutlined: {
+        borderWidth: 1.5,
+        borderColor: "#F3B2C6",
+        },
+
+        formRow: {
+        flexDirection: "row",
+        gap: 10,
+        },
+
+        halfInput: {
+        flex: 1,
+        },
+
+        cancelButton: {
+        marginTop: 12,
+        paddingVertical: 12,
+        borderRadius: 14,
+        backgroundColor: "#FFF1F6",
+        alignItems: "center",
+        },
+
+        cancelButtonText: {
+        color: "#D85C8A",
+        fontWeight: "800",
+        fontSize: 14,
+        },
+        deleteCardButton: {
+  marginLeft: 10,
+  backgroundColor: "rgba(255,255,255,0.22)",
+  padding: 7,
+  borderRadius: 10,
+},
+
+deleteModalOverlay: {
+  flex: 1,
+  backgroundColor: "rgba(0,0,0,0.35)",
+  justifyContent: "center",
+  alignItems: "center",
+  paddingHorizontal: 24,
+},
+
+deleteModalCard: {
+  width: "100%",
+  backgroundColor: "#FFFFFF",
+  borderRadius: 24,
+  padding: 24,
+  alignItems: "center",
+},
+
+deleteIconBox: {
+  width: 58,
+  height: 58,
+  borderRadius: 29,
+  backgroundColor: "#FFF1F6",
+  alignItems: "center",
+  justifyContent: "center",
+  marginBottom: 14,
+},
+
+deleteModalTitle: {
+  fontSize: 18,
+  fontWeight: "900",
+  color: "#0D2B3E",
+},
+
+deleteModalText: {
+  marginTop: 8,
+  color: "#777",
+  textAlign: "center",
+  fontSize: 13,
+  lineHeight: 19,
+},
+
+deleteModalActions: {
+  flexDirection: "row",
+  gap: 10,
+  marginTop: 22,
+  width: "100%",
+},
+
+deleteCancelButton: {
+  flex: 1,
+  paddingVertical: 13,
+  borderRadius: 14,
+  backgroundColor: "#FFF1F6",
+  alignItems: "center",
+},
+
+deleteCancelText: {
+  color: "#D85C8A",
+  fontWeight: "800",
+},
+
+deleteConfirmButton: {
+  flex: 1,
+  paddingVertical: 13,
+  borderRadius: 14,
+  backgroundColor: "#D85C8A",
+  alignItems: "center",
+},
+
+deleteConfirmText: {
+  color: "#FFFFFF",
+  fontWeight: "800",
+},
 
 });
 

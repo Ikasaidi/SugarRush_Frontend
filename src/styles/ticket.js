@@ -340,5 +340,165 @@ const styles = StyleSheet.create({
         fontSize: 12,
         lineHeight: 17,
     },
+    quantityContainer: {
+        backgroundColor: "#FFFFFF",
+        marginHorizontal: 12,
+        marginTop: 10,
+        paddingVertical: 18,
+        paddingHorizontal: 18,
+        borderRadius: 20,
+
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+
+        shadowColor: "#000",
+        shadowOpacity: 0.06,
+        shadowRadius: 8,
+        elevation: 3,
+    },
+
+    quantityLabel: {
+        fontSize: 15,
+        fontWeight: "800",
+        color: "#0D2B3E",
+    },
+
+    quantitySubLabel: {
+        marginTop: 4,
+        fontSize: 11,
+        color: "#888",
+    },
+
+    quantitySelector: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+
+    quantityButton: {
+        width: 38,
+        height: 38,
+        borderRadius: 19,
+        backgroundColor: "#D85C8A",
+
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    quantityButtonDisabled: {
+        opacity: 0.4,
+    },
+
+    quantityMiddle: {
+        width: 58,
+        alignItems: "center",
+    },
+
+    quantityValue: {
+        fontSize: 24,
+        fontWeight: "900",
+        color: "#B85D83",
+    },
+    ticketPreviewCard: {
+  backgroundColor: "#FFFFFF",
+  marginHorizontal: 12,
+  marginTop: 16,
+  padding: 16,
+  borderRadius: 18,
+  flexDirection: "row",
+  alignItems: "center",
+  shadowColor: "#000",
+  shadowOpacity: 0.07,
+  shadowRadius: 8,
+  elevation: 3,
+},
+
+ticketIconBox: {
+  width: 54,
+  height: 54,
+  borderRadius: 18,
+  backgroundColor: "#FFF0F6",
+  justifyContent: "center",
+  alignItems: "center",
+  marginRight: 12,
+},
+
+ticketPreviewTitle: {
+  fontSize: 16,
+  fontWeight: "900",
+  color: "#0D2B3E",
+},
+
+ticketPreviewText: {
+  fontSize: 12,
+  color: "#777",
+  marginTop: 4,
+  lineHeight: 17,
+},
+
+infoRow: {
+  flexDirection: "row",
+  marginHorizontal: 12,
+  gap: 10,
+  marginTop: 10,
+},
+
+infoBox: {
+  flex: 1,
+  backgroundColor: "#FFFFFF",
+  borderRadius: 16,
+  padding: 14,
+  shadowColor: "#000",
+  shadowOpacity: 0.06,
+  shadowRadius: 8,
+  elevation: 2,
+},
+
+infoTitle: {
+  marginTop: 8,
+  fontSize: 13,
+  fontWeight: "800",
+  color: "#0D2B3E",
+},
+
+infoText: {
+  marginTop: 3,
+  fontSize: 11,
+  color: "#777",
+},
+
+totalSubLabel: {
+  color: "#FFEAF2",
+  fontSize: 11,
+  marginTop: 4,
+},
+
+toastBox: {
+  marginHorizontal: 14,
+  marginTop: 16,
+  paddingVertical: 14,
+  paddingHorizontal: 16,
+
+  borderRadius: 16,
+
+  flexDirection: "row",
+  alignItems: "center",
+
+  gap: 10,
+},
+
+toastSuccess: {
+  backgroundColor: "#7DBA89",
+},
+
+toastWarning: {
+  backgroundColor: "#D88A5C",
+},
+
+toastText: {
+  color: "#fff",
+  fontWeight: "700",
+  flex: 1,
+},
 });
 export default styles;
