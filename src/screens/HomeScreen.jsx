@@ -1,270 +1,51 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  ActivityIndicator,
+  Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import API from "../services/api";
+import AuthContext from "../context/AuthContext";
 
 const STALE_AFTER_MS = 5 * 60 * 1000;
 
 export default function HomeScreen() {
-  const [schedules, setSchedules] = useState([]);
-  const [trainStatus, setTrainStatus] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [now, setNow] = useState(new Date());
+  const { refreshUser } = useContext(AuthContext);
+  const [loadingBuy, setLoadingBuy] = useState(false);
 
-  const fetchData = async () => {
+  const handleBuy = async (price) => {
     try {
-      const [scheduleRes, statusRes] = await Promise.all([
-        API.get("/train-schedules/upcoming"),
-        API.get("/train-status"),
-      ]);
+      setLoadingBuy(true);
 
-      setSchedules(scheduleRes.data);
-      setTrainStatus(statusRes.data);
+      // parse price like '45€' -> 45
+      const amount = parseFloat(String(price).replace(/[^0-9.,]/g, "").replace(",", ".")) || 0;
+
+      const payload = {
+        quantity: 1,
+        unit_price: amount,
+        currency: "EUR",
+      };
+
+      console.log("HomeScreen: purchasing", payload);
+
+      await API.post("/purchases/purchase", payload);
+
+      // Refresh user data (wallet/purchases)
+      await refreshUser();
+
+      Alert.alert("Achat effectué", "Votre achat a été enregistré.");
     } catch (error) {
-      console.log("Train data fetch error:", error.response?.data || error.message);
+      console.log("PURCHASE ERROR:", error?.response?.data || error.message);
+      Alert.alert("Erreur", "Impossible de compléter l'achat.");
     } finally {
-      setLoading(false);
+      setLoadingBuy(false);
     }
   };
-
-  useEffect(() => {
-    fetchData();
-
-    const interval = setInterval(() => {
-      setNow(new Date());
-      fetchData();
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const formatTime = (dateString) => {
-    return new Date(dateString).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
-  };
-
-  const formatCountdown = (ms) => {
-    if (ms <= 0) return "00:00";
-
-    const totalSeconds = Math.floor(ms / 1000);
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-
-    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-  };
-
-  const formatStation = (station) => {
-    if (!station) return "Station inconnue";
-    return station.replace("station-", "Station ").replace("station_", "Station ");
-  };
-
-  const isTrainOffline = () => {
-    if (!trainStatus) return true;
-    if (trainStatus.service_status === "offline") return true;
-    if (!trainStatus.last_seen_at) return true;
-
-    const lastSeen = new Date(trainStatus.last_seen_at);
-    return now - lastSeen > STALE_AFTER_MS;
-  };
-
-  const isTrainPaused = () => {
-    if (!trainStatus) return false;
-    if (trainStatus.train_running) return false;
-    if (!trainStatus.last_stopped_at) return false;
-
-    const stoppedAt = new Date(trainStatus.last_stopped_at);
-    return now - stoppedAt > 2 * 60 * 1000;
-  };
-
-  const getGlobalStatus = () => {
-    if (isTrainOffline()) {
-      return {
-        title: "Hors ligne",
-        subtitle: "Le train n’est pas connecté au réseau.",
-        icon: "cloud-offline-outline",
-        color: "#64748B",
-        softColor: "#EEF2F7",
-      };
-    }
-
-    if (isTrainPaused()) {
-      return {
-        title: "Service en pause",
-        subtitle: `Dernière station connue : ${formatStation(trainStatus?.last_known_station)}`,
-        icon: "pause-circle-outline",
-        color: "#A68A7B",
-        softColor: "#F6EFEA",
-      };
-    }
-
-    if (trainStatus?.train_running) {
-      return {
-        title: "Train en route",
-        subtitle: `Départ réel confirmé depuis ${formatStation(trainStatus?.last_known_station)}`,
-        icon: "train-outline",
-        color: "#C05A86",
-        softColor: "#FFF3F7",
-      };
-    }
-
-    return {
-      title: "Train arrêté",
-      subtitle: `Position actuelle : ${formatStation(trainStatus?.last_known_station)}`,
-      icon: "radio-button-on-outline",
-      color: "#E97991",
-      softColor: "#FFF3F7",
-    };
-  };
-
-  const getScheduleStatus = (schedule, index) => {
-  const departure = new Date(schedule.departure_time);
-  const arrival = new Date(schedule.arrival_time);
-
-  const isFirstCard = index === 0;
-  const trainRunning = trainStatus?.train_running === true;
-  const lastKnownStation = trainStatus?.last_known_station;
-
-  const trainIsAtDepartureStation =
-    lastKnownStation === schedule.departure_station;
-
-  const trainIsAtArrivalStation =
-    lastKnownStation === schedule.arrival_station;
-
-  if (isTrainOffline()) {
-    return {
-      label: "Hors ligne",
-      timer: "--:--",
-      status: "offline",
-      badge: "OFFLINE",
-      helper: "Le train n’est pas connecté. Horaire affiché à titre indicatif.",
-    };
-  }
-
-  if (isTrainPaused()) {
-    return {
-      label: "Service en pause",
-      timer: "--:--",
-      status: "paused",
-      badge: "PAUSE",
-      helper: "Le train est arrêté depuis un moment. Les nouvelles prédictions sont suspendues.",
-    };
-  }
-
-  // TRAIN ROULE VRAIMENT
-  if (isFirstCard && trainRunning) {
-    if (now > arrival) {
-      return {
-        label: "Retard estimé",
-        timer: `+${formatCountdown(now - arrival)}`,
-        status: "late-moving",
-        badge: "RETARD",
-        helper: "Le train roule encore malgré l’heure d’arrivée prévue.",
-      };
-    }
-
-    return {
-      label: "Arrive dans",
-      timer: formatCountdown(arrival - now),
-      status: "moving",
-      badge: "EN ROUTE",
-      helper: "Le train est réellement en déplacement.",
-    };
-  }
-
-  // TRAIN ARRIVÉ À LA STATION
-  if (isFirstCard && !trainRunning && trainIsAtArrivalStation) {
-    return {
-      label: "Arrivé",
-      timer: "00:00",
-      status: "stopped",
-      badge: "ARRIVÉ",
-      helper: `Le train est arrivé à ${formatStation(lastKnownStation)}.`,
-    };
-  }
-
-  // TRAIN EN PAUSE AVANT LE PROCHAIN DÉPART
-  if (!trainRunning && trainIsAtDepartureStation && now < departure) {
-    return {
-      label: "Départ dans",
-      timer: formatCountdown(departure - now),
-      status: "waiting",
-      badge: isFirstCard ? "PROCHAIN" : "À VENIR",
-      helper: `Le train attend à ${formatStation(lastKnownStation)} avant le prochain départ.`,
-    };
-  }
-
-  // ARRIVÉE NON CONFIRMÉE
-  if (isFirstCard && now > arrival && !trainRunning) {
-    return {
-      label: "À confirmer",
-      timer: "00:00",
-      status: "late",
-      badge: "À CONFIRMER",
-      helper: "L’heure prévue est passée, mais l’arrivée n’est pas confirmée.",
-    };
-  }
-
-  // HORAIRE FUTUR NORMAL
-  if (now < departure) {
-    return {
-      label: "Départ dans",
-      timer: formatCountdown(departure - now),
-      status: "waiting",
-      badge: isFirstCard ? "PROCHAIN" : "À VENIR",
-      helper: "Horaire prévu.",
-    };
-  }
-
-  return {
-    label: "Prévu",
-    timer: "00:00",
-    status: "waiting",
-    badge: "À VENIR",
-    helper: "Horaire prévu.",
-  };
-};
-
-  const getEmptyMessage = () => {
-    if (isTrainOffline()) {
-      return {
-        title: "Train hors ligne",
-        text: "Aucun horaire actif, car le train n’est pas connecté.",
-      };
-    }
-
-    if (isTrainPaused()) {
-      return {
-        title: "Service en pause",
-        text: "Le train est arrêté depuis un moment. Les horaires reprendront au prochain départ réel.",
-      };
-    }
-
-    if (trainStatus?.train_running) {
-      return {
-        title: "Train en route",
-        text: "Le train roule, mais aucun horaire actif n’est disponible. Le backend recalculera au prochain départ réel.",
-      };
-    }
-
-    return {
-      title: "Aucun horaire disponible",
-      text: "Les prochains passages apparaîtront quand le train démarrera réellement.",
-    };
-  };
-
-  const globalStatus = getGlobalStatus();
-  const emptyMessage = getEmptyMessage();
 
   return (
     <View style={styles.container}>
@@ -420,19 +201,18 @@ export default function HomeScreen() {
                   </View>
                 </View>
 
-                <View style={styles.separator} />
-
-                <View style={styles.bottomRow}>
-                  <Text style={styles.helperText}>{status.helper}</Text>
-
-                  <TouchableOpacity style={styles.detailsButton}>
-                    <Text style={styles.detailsButtonText}>Détails</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            );
-          })
-        )}
+              {!train.full && (
+                <TouchableOpacity
+                  style={styles.buyButton}
+                  onPress={() => handleBuy(train.price)}
+                  disabled={loadingBuy}
+                >
+                  <Text style={styles.buyButtonText}>{loadingBuy ? "Loading..." : "Acheter"}</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+        ))}
       </ScrollView>
     </View>
   );

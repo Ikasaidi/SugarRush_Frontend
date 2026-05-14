@@ -16,6 +16,65 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   // =====================================================
+  // FETCH USER WALLET
+  // =====================================================
+
+  const fetchUserWallet = async (userData) => {
+    try {
+      const walletRes = await API.get("/wallet/me");
+
+      if (walletRes?.data?.wallet) {
+        return {
+          ...userData,
+          wallet: walletRes.data.wallet,
+          purchases: walletRes.data.purchases || userData.purchases || [],
+          stats: walletRes.data.stats || userData.stats || {},
+        };
+      }
+    } catch (error) {
+      // If wallet endpoint is missing or returns error, fall back to wallet inside userData
+      console.log("FETCH WALLET ERROR:", error?.response?.data || error.message);
+    }
+
+    // Fallback: if backend already included wallet inside the user object, use it
+    if (userData?.wallet) {
+      return {
+        ...userData,
+        wallet: userData.wallet,
+      };
+    }
+
+    // If purchases exist on the user object, derive paid ticket count and total spent
+    const purchases = userData?.purchases || [];
+
+    if (purchases.length > 0) {
+      const paidCount = purchases.reduce((sum, p) => sum + (p.quantity || 0), 0);
+      const totalSpent = purchases.reduce((sum, p) => sum + (Number(p.total_amount) || 0), 0);
+
+      return {
+        ...userData,
+        wallet: {
+          free_ticket_balance: 0,
+          paid_ticket_balance: paidCount,
+        },
+        stats: {
+          ...(userData.stats || {}),
+          total_spent: totalSpent,
+        },
+      };
+    }
+
+    // Default empty wallet
+    return {
+      ...userData,
+      wallet: {
+        free_ticket_balance: 0,
+        paid_ticket_balance: 0,
+      },
+    };
+  };
+
+  // =====================================================
   // RESTORE SESSION
   // =====================================================
 
@@ -37,7 +96,9 @@ export const AuthProvider = ({ children }) => {
 
         setToken(savedToken);
 
-        setUser(res.data.user);
+        // FETCH WALLET DATA
+        const userWithWallet = await fetchUserWallet(res.data.user);
+        setUser(userWithWallet);
 
         setIsLoggedIn(true);
       } catch (error) {
@@ -104,10 +165,14 @@ export const AuthProvider = ({ children }) => {
       await TokenService.saveToken(token);
 
       setToken(token);
-      setUser(user);
+      
+      // FETCH WALLET DATA
+      const userWithWallet = await fetchUserWallet(user);
+      setUser(userWithWallet);
+      
       setIsLoggedIn(true);
 
-      return res.data;
+      return { token, user: userWithWallet };
     } catch (error) {
       console.log("LOGIN ERROR:", error?.response?.data || error.message);
       throw error;
@@ -132,6 +197,43 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // =====================================================
+  // REFRESH USER (to update wallet data)
+  // =====================================================
+
+  const refreshUser = async () => {
+    try {
+      console.log("AuthContext: refreshUser called");
+
+      const res = await API.get("/users/me");
+
+      const serverUser = res?.data?.user || null;
+
+      if (!serverUser) {
+        console.log("AuthContext: /users/me returned no user");
+        return null;
+      }
+
+      // Merge wallet from /wallet/me when available, otherwise rely on serverUser.wallet
+      const userWithWallet = await fetchUserWallet(serverUser);
+
+      // Ensure purchases and stats are present
+      const merged = {
+        ...userWithWallet,
+        purchases: serverUser.purchases || userWithWallet.purchases || [],
+        stats: serverUser.stats || userWithWallet.stats || {},
+      };
+
+      setUser(merged);
+
+      console.log("AuthContext: refreshUser success");
+
+      return merged;
+    } catch (error) {
+      console.log("REFRESH USER ERROR:", error?.response?.data || error.message);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -146,6 +248,7 @@ export const AuthProvider = ({ children }) => {
         login,
         register,
         logout,
+        refreshUser,
       }}
     >
       {children}
