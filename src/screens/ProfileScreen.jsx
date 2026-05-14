@@ -1,7 +1,7 @@
 // screens/ProfileScreen.tsx
 
-import React, { useContext } from "react";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import React, { useContext, useState, useCallback } from "react";
+import { View, Text, TouchableOpacity, ScrollView, RefreshControl, ActivityIndicator } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
@@ -11,7 +11,25 @@ import AuthContext from "../context/AuthContext";
 import styles from "../styles/profile";
 
 export default function ProfileScreen() {
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout, refreshUser } = useContext(AuthContext);
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleRefresh = useCallback(async () => {
+    try {
+      setRefreshing(true);
+
+      console.log("ProfileScreen: handleRefresh triggered");
+
+      await refreshUser?.();
+
+      console.log("ProfileScreen: refreshUser completed");
+    } catch (err) {
+      console.log("ProfileScreen: refresh error", err);
+    } finally {
+      setRefreshing(false);
+    }
+  }, [refreshUser]);
 
   const navigation = useNavigation();
   const isAdmin = user?.user_type === "admin";
@@ -20,8 +38,16 @@ export default function ProfileScreen() {
     <ScrollView
       style={styles.container}
       contentContainerStyle={{
+        flexGrow: 1,
         paddingBottom: 40,
       }}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
+          colors={["#EC6A8E"]}
+        />
+      }
       showsVerticalScrollIndicator={false}
     >
       {/* HEADER */}
@@ -56,6 +82,7 @@ export default function ProfileScreen() {
 
           <Ionicons name="chevron-forward" size={20} color="#999" />
         </TouchableOpacity>
+
       </LinearGradient>
 
       {/* WALLET */}
@@ -66,6 +93,37 @@ export default function ProfileScreen() {
 
           <Text style={styles.cardTitle}>Mon portefeuille</Text>
         </View>
+
+        <TouchableOpacity
+          onPress={handleRefresh}
+          activeOpacity={0.85}
+          style={{
+            alignSelf: "flex-start",
+            marginBottom: 14,
+            paddingHorizontal: 14,
+            paddingVertical: 9,
+            backgroundColor: "#EC6A8E",
+            borderRadius: 18,
+            flexDirection: "row",
+            alignItems: "center",
+            shadowColor: "#000",
+            shadowOpacity: 0.15,
+            shadowRadius: 6,
+            shadowOffset: { width: 0, height: 3 },
+            elevation: 4,
+          }}
+        >
+          {refreshing ? (
+            <ActivityIndicator size="small" color="#fff" />
+          ) : (
+            <>
+              <Ionicons name="refresh-outline" size={18} color="#fff" />
+              <Text style={{ color: "#fff", marginLeft: 8, fontWeight: "700" }}>
+                Rafraîchir
+              </Text>
+            </>
+          )}
+        </TouchableOpacity>
 
         <View style={styles.walletRow}>
           <View style={[styles.ticketBox, styles.freeBox]}>

@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
+import API from "../services/api";
+import AuthContext from "../context/AuthContext";
 
 const trains = [
   {
@@ -58,6 +61,38 @@ const trains = [
 ];
 
 export default function HomeScreen() {
+  const { refreshUser } = useContext(AuthContext);
+  const [loadingBuy, setLoadingBuy] = useState(false);
+
+  const handleBuy = async (price) => {
+    try {
+      setLoadingBuy(true);
+
+      // parse price like '45€' -> 45
+      const amount = parseFloat(String(price).replace(/[^0-9.,]/g, "").replace(",", ".")) || 0;
+
+      const payload = {
+        quantity: 1,
+        unit_price: amount,
+        currency: "EUR",
+      };
+
+      console.log("HomeScreen: purchasing", payload);
+
+      await API.post("/purchases/purchase", payload);
+
+      // Refresh user data (wallet/purchases)
+      await refreshUser();
+
+      Alert.alert("Achat effectué", "Votre achat a été enregistré.");
+    } catch (error) {
+      console.log("PURCHASE ERROR:", error?.response?.data || error.message);
+      Alert.alert("Erreur", "Impossible de compléter l'achat.");
+    } finally {
+      setLoadingBuy(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <LinearGradient colors={["#C05A86", "#FF79A8"]} style={styles.header}>
@@ -124,8 +159,12 @@ export default function HomeScreen() {
               </View>
 
               {!train.full && (
-                <TouchableOpacity style={styles.buyButton}>
-                  <Text style={styles.buyButtonText}>Acheter</Text>
+                <TouchableOpacity
+                  style={styles.buyButton}
+                  onPress={() => handleBuy(train.price)}
+                  disabled={loadingBuy}
+                >
+                  <Text style={styles.buyButtonText}>{loadingBuy ? "Loading..." : "Acheter"}</Text>
                 </TouchableOpacity>
               )}
             </View>
