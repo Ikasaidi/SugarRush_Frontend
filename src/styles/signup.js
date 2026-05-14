@@ -84,4 +84,51 @@ export default StyleSheet.create({
   dotActive: {
     backgroundColor: '#9BC47C',
   },
+
+  typeContainer: {
+  marginTop: 15,
+  width: "100%",
+},
+
+typeTitle: {
+  fontSize: 16,
+  fontWeight: "700",
+  color: "#FF8FB3",
+  marginBottom: 10,
+  textAlign: "center",
+},
+
+typeButtons: {
+  flexDirection: "row",
+  justifyContent: "space-between",
+  gap: 10,
+},
+
+typeButton: {
+  flex: 1,
+  paddingVertical: 12,
+  borderRadius: 30,
+  textAlign: "center",
+  backgroundColor: "#ffffff", // rose pastel
+  color: "#EC6A8E",
+  fontWeight: "600",
+  borderWidth: 2,
+  borderColor: "transparent",
+  overflow: "hidden",
+    borderColor: "#FF8FB3", // contour rose
+  shadowColor: "#FF8FB3",
+},
+
+activeType: {
+  backgroundColor: "#EC6A8E",
+  color: "#ffffff",
+  borderColor: "#FF8FB3", // contour rose
+  shadowColor: "#FF8FB3",
+  shadowOpacity: 0.4,
+  shadowRadius: 8,
+  elevation: 4,
+},
+
+
+
 });

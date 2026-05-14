@@ -58,7 +58,7 @@ export default function LoginScreen() {
 
         <Text style={styles.footer}>
           No account yet?{" "}
-          <Text onPress={() => navigation.navigate("Signup")}>
+          <Text style={styles.signUp} onPress={() => navigation.navigate("Signup")}>
             Sign up
           </Text>
         </Text>

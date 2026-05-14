@@ -20,6 +20,11 @@ export default function SignupScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [userType, setUserType] = useState("student");
 
   // 🔥 SIGNUP HANDLER CLEAN
   const handleSignup = async () => {
@@ -35,17 +40,20 @@ export default function SignupScreen() {
 
       // 1. REGISTER
       await register({
-        username: username.trim(),
-        email: email.trim(),
-        password: password.trim(),
-        user_type: "student",
+        username,
+        email,
+        password,
+        fname,
+        lname,
+        phone,
+        address,
+        user_type: userType,
       });
 
       console.log("REGISTER SUCCESS");
 
       // 2. LOGIN seulement si register OK
       await login(email.trim(), password.trim());
-
     } catch (error) {
       console.log("SIGNUP ERROR:", error?.response?.data || error.message);
 
@@ -55,7 +63,6 @@ export default function SignupScreen() {
         "Inscription échouée. Vérifie les champs.";
 
       Alert.alert("Erreur", message);
-
     } finally {
       setLoading(false);
     }
@@ -64,7 +71,6 @@ export default function SignupScreen() {
   return (
     <LinearGradient colors={["#FF8FB3", "#EC6A8E"]} style={styles.background}>
       <View style={styles.card}>
-
         <LogoCircle />
 
         <Text style={styles.title}>Candy Train</Text>
@@ -93,14 +99,62 @@ export default function SignupScreen() {
           onChangeText={setPassword}
         />
 
+        <IconInput
+          icon="person-outline"
+          placeholder="First name"
+          value={fname}
+          onChangeText={setFname}
+        />
+
+        <IconInput
+          icon="person-outline"
+          placeholder="Last name"
+          value={lname}
+          onChangeText={setLname}
+        />
+
+        <IconInput
+          icon="call-outline"
+          placeholder="Phone"
+          value={phone}
+          onChangeText={setPhone}
+        />
+
+        <IconInput
+          icon="home-outline"
+          placeholder="Address"
+          value={address}
+          onChangeText={setAddress}
+        />
+
+        <View style={styles.typeContainer}>
+          <Text style={styles.typeTitle}>Account type</Text>
+
+          <View style={styles.typeButtons}>
+            {[
+              { key: "student", label: "Student" },
+              { key: "adult", label: "Adult" },
+              { key: "senior", label: "Senior" },
+            ].map((item) => (
+              <Text
+                key={item.key}
+                style={[
+                  styles.typeButton,
+                  userType === item.key && styles.activeType,
+                ]}
+                onPress={() => setUserType(item.key)}
+              >
+                {item.label}
+              </Text>
+            ))}
+          </View>
+        </View>
+
         {/* LOADING STATE */}
         {loading ? (
           <ActivityIndicator size="large" color="#fff" />
         ) : (
-          <GradientButton
-            title="Create my account"
-            onPress={handleSignup}
-          />
+          <GradientButton title="Create my account" onPress={handleSignup} />
         )}
 
         <Text style={styles.footer}>
@@ -114,7 +168,6 @@ export default function SignupScreen() {
         </Text>
 
         <PageDots />
-
       </View>
     </LinearGradient>
   );
