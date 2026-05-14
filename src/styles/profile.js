@@ -400,8 +400,267 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
     },
+    cardTop: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
 
-   
+    chip: {
+        width: 45,
+        height: 32,
+        borderRadius: 8,
+        backgroundColor: "#F7D27A",
+        marginTop: 20,
+        marginBottom: 18,
+    },
+
+    cardLabel: {
+        color: "#fff",
+        fontSize: 9,
+        opacity: 0.8,
+        marginBottom: 4,
+    },
+
+    bankCardGradient: {
+        marginHorizontal: 24,
+        marginTop: 40,
+        borderRadius: 28,
+        padding: 24,
+        height: 215,
+        justifyContent: "space-between",
+        shadowColor: "#000",
+        shadowOpacity: 0.18,
+        shadowRadius: 18,
+        elevation: 8,
+    },
+
+    cardTop: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+
+    cardBrand: {
+        color: "#fff",
+        fontSize: 26,
+        fontWeight: "900",
+        letterSpacing: 1,
+    },
+
+    chip: {
+        width: 52,
+        height: 38,
+        borderRadius: 10,
+        backgroundColor: "#F6D36B",
+        marginTop: 8,
+    },
+
+    cardNumber: {
+        color: "#fff",
+        fontSize: 22,
+        fontWeight: "700",
+        letterSpacing: 2.5,
+        marginTop: 10,
+    },
+
+    cardBottom: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-end",
+        marginTop: 10,
+    },
+
+    cardLabel: {
+        color: "rgba(255,255,255,0.7)",
+        fontSize: 9,
+        fontWeight: "600",
+        marginBottom: 4,
+        letterSpacing: 1,
+    },
+
+    cardName: {
+        color: "#fff",
+        fontSize: 14,
+        fontWeight: "700",
+        letterSpacing: 1,
+    },
+    addCard: {
+        marginHorizontal: 24,
+        marginTop: 18,
+        backgroundColor: "#fff",
+        borderRadius: 18,
+        paddingVertical: 18,
+        width: "50%",
+        alignSelf: "center",
+
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+
+        shadowColor: "#000",
+        shadowOpacity: 0.06,
+        shadowRadius: 10,
+        elevation: 3,
+    },
+
+    addText: {
+        marginLeft: 8,
+        fontSize: 14,
+        fontWeight: "600",
+        color: "#444",
+    },
+    emptyPaymentBox: {
+        backgroundColor: "#FFFFFF",
+        marginHorizontal: 18,
+        marginTop: 24,
+        padding: 26,
+        borderRadius: 22,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOpacity: 0.06,
+        shadowRadius: 8,
+        elevation: 3,
+        },
+
+        emptyPaymentIcon: {
+        width: 64,
+        height: 64,
+        borderRadius: 32,
+        backgroundColor: "#FFF1F6",
+        alignItems: "center",
+        justifyContent: "center",
+        marginBottom: 12,
+        },
+
+        emptyPaymentTitle: {
+        fontSize: 17,
+        fontWeight: "900",
+        color: "#0D2B3E",
+        },
+
+        emptyPaymentText: {
+        marginTop: 6,
+        color: "#777",
+        textAlign: "center",
+        fontSize: 13,
+        },
+
+        modalSubtitle: {
+        textAlign: "center",
+        color: "#777",
+        fontSize: 13,
+        marginTop: 4,
+        marginBottom: 16,
+        },
+
+        inputOutlined: {
+        borderWidth: 1.5,
+        borderColor: "#F3B2C6",
+        },
+
+        formRow: {
+        flexDirection: "row",
+        gap: 10,
+        },
+
+        halfInput: {
+        flex: 1,
+        },
+
+        cancelButton: {
+        marginTop: 12,
+        paddingVertical: 12,
+        borderRadius: 14,
+        backgroundColor: "#FFF1F6",
+        alignItems: "center",
+        },
+
+        cancelButtonText: {
+        color: "#D85C8A",
+        fontWeight: "800",
+        fontSize: 14,
+        },
+        deleteCardButton: {
+  marginLeft: 10,
+  backgroundColor: "rgba(255,255,255,0.22)",
+  padding: 7,
+  borderRadius: 10,
+},
+
+deleteModalOverlay: {
+  flex: 1,
+  backgroundColor: "rgba(0,0,0,0.35)",
+  justifyContent: "center",
+  alignItems: "center",
+  paddingHorizontal: 24,
+},
+
+deleteModalCard: {
+  width: "100%",
+  backgroundColor: "#FFFFFF",
+  borderRadius: 24,
+  padding: 24,
+  alignItems: "center",
+},
+
+deleteIconBox: {
+  width: 58,
+  height: 58,
+  borderRadius: 29,
+  backgroundColor: "#FFF1F6",
+  alignItems: "center",
+  justifyContent: "center",
+  marginBottom: 14,
+},
+
+deleteModalTitle: {
+  fontSize: 18,
+  fontWeight: "900",
+  color: "#0D2B3E",
+},
+
+deleteModalText: {
+  marginTop: 8,
+  color: "#777",
+  textAlign: "center",
+  fontSize: 13,
+  lineHeight: 19,
+},
+
+deleteModalActions: {
+  flexDirection: "row",
+  gap: 10,
+  marginTop: 22,
+  width: "100%",
+},
+
+deleteCancelButton: {
+  flex: 1,
+  paddingVertical: 13,
+  borderRadius: 14,
+  backgroundColor: "#FFF1F6",
+  alignItems: "center",
+},
+
+deleteCancelText: {
+  color: "#D85C8A",
+  fontWeight: "800",
+},
+
+deleteConfirmButton: {
+  flex: 1,
+  paddingVertical: 13,
+  borderRadius: 14,
+  backgroundColor: "#D85C8A",
+  alignItems: "center",
+},
+
+deleteConfirmText: {
+  color: "#FFFFFF",
+  fontWeight: "800",
+},
+
 });
 
 export default styles;

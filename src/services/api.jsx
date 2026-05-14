@@ -3,7 +3,7 @@ import axios from "axios";
 import { TokenService } from "./tokenService";
 
 const API = axios.create({
-  baseURL: "http://10.10.16.76:9696/api",
+  baseURL: 'http://10.10.16.32:9696/api', // METTRE SON IP
 });
 
 // =======================================================
