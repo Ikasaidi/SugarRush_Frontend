@@ -53,7 +53,7 @@ export default function NotificationsScreen() {
               <View style={styles.iconBox}>
                 <Ionicons name="mail-outline" size={16} color="#EC6A8E" />
               </View>
-              <Text style={styles.itemText}>Emails</Text>
+              <Text style={styles.itemText}>E-mails</Text>
             </View>
 
             <Switch
@@ -84,7 +84,7 @@ export default function NotificationsScreen() {
               <View style={styles.iconBox}>
                 <Ionicons name="pricetag-outline" size={16} color="#EC6A8E" />
               </View>
-              <Text style={styles.itemText}>Offres & promos</Text>
+              <Text style={styles.itemText}>Offres et promos</Text>
             </View>
 
             <Switch

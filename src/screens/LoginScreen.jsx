@@ -36,7 +36,7 @@ export default function LoginScreen() {
     setErrorMessage("");
 
     if (!email || !password) {
-      setErrorMessage("Please enter your email and password.");
+      setErrorMessage("Veuillez entrer votre email et votre mot de passe.");
       return;
     }
 
@@ -45,7 +45,7 @@ export default function LoginScreen() {
       await login(email.trim(), password.trim());
     } catch (error) {
       const message =
-        error?.response?.data?.message || "Login failed. Please try again.";
+        error?.response?.data?.message || "Échec de la connexion. Réessaie plus tard.";
       setErrorMessage(message);
     } finally {
       setLoading(false);
@@ -58,7 +58,7 @@ export default function LoginScreen() {
         <AnimatedLogo />
 
         <Text style={styles.title}>Candy Train</Text>
-        <Text style={styles.subtitle}>Welcome!</Text>
+        <Text style={styles.subtitle}>Bienvenue !</Text>
 
         <IconInput
           icon="mail-outline"
@@ -70,7 +70,7 @@ export default function LoginScreen() {
 
         <IconInput
           icon="lock-closed-outline"
-          placeholder="Password"
+          placeholder="Mot de passe"
           secure
           value={password}
           onChangeText={setPassword}
@@ -88,16 +88,16 @@ export default function LoginScreen() {
         {loading ? (
           <ActivityIndicator size="large" color="#fff" />
         ) : (
-          <GradientButton title="Sign In" onPress={handleLogin} />
+          <GradientButton title="Se connecter" onPress={handleLogin} />
         )}
 
         <Text style={styles.footer}>
-          No account yet?{" "}
+          Pas encore de compte ?{" "}
           <Text
             style={styles.signUp}
             onPress={() => navigation.navigate("Signup")}
           >
-            Sign up
+            S'inscrire
           </Text>
         </Text>
       </View>
