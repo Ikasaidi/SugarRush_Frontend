@@ -33,6 +33,7 @@ export default function ProfileScreen() {
 
   const navigation = useNavigation();
   const isAdmin = user?.user_type === "admin";
+  const purchases = user?.purchases || [];
 
   return (
     <ScrollView
@@ -50,8 +51,6 @@ export default function ProfileScreen() {
       }
       showsVerticalScrollIndicator={false}
     >
-      {/* HEADER */}
-
       <LinearGradient colors={["#FF8FB3", "#EC6A8E"]} style={styles.header}>
         <View style={styles.avatar}>
           <Ionicons name="person-outline" size={40} color="#EC6A8E" />
@@ -62,8 +61,6 @@ export default function ProfileScreen() {
         </Text>
 
         <Text style={styles.email}>{user?.email || "Utilisateur"}</Text>
-
-        {/* QR */}
 
         <TouchableOpacity
           style={styles.qrCard}
@@ -76,21 +73,16 @@ export default function ProfileScreen() {
 
           <View style={{ flex: 1 }}>
             <Text style={styles.qrTitle}>Mon QR Code</Text>
-
             <Text style={styles.qrSubtitle}>Afficher mon code personnel</Text>
           </View>
 
           <Ionicons name="chevron-forward" size={20} color="#999" />
         </TouchableOpacity>
-
       </LinearGradient>
-
-      {/* WALLET */}
 
       <View style={styles.card}>
         <View style={styles.cardHeader}>
           <Ionicons name="wallet-outline" size={20} color="#EC6A8E" />
-
           <Text style={styles.cardTitle}>Mon portefeuille</Text>
         </View>
 
@@ -128,18 +120,12 @@ export default function ProfileScreen() {
         <View style={styles.walletRow}>
           <View style={[styles.ticketBox, styles.freeBox]}>
             <Text style={styles.ticketLabel}>Billets gratuits</Text>
-
-            <Text style={styles.ticketNumber}>
-              {user?.wallet?.free_ticket_balance || 0}
-            </Text>
+            <Text style={styles.ticketNumber}>{user?.wallet?.free_ticket_balance || 0}</Text>
           </View>
 
           <View style={[styles.ticketBox, styles.paidBox]}>
             <Text style={styles.ticketLabel}>Billets payés</Text>
-
-            <Text style={styles.ticketNumber}>
-              {user?.wallet?.paid_ticket_balance || 0}
-            </Text>
+            <Text style={styles.ticketNumber}>{user?.wallet?.paid_ticket_balance || 0}</Text>
           </View>
         </View>
 
@@ -147,67 +133,49 @@ export default function ProfileScreen() {
 
         <View style={styles.totalRow}>
           <Text style={styles.totalText}>Total dépensé</Text>
-
-          <Text style={styles.totalAmount}>
-            {(user?.stats?.total_spent || 0).toFixed(2)}€
-          </Text>
+          <Text style={styles.totalAmount}>{(user?.stats?.total_spent || 0).toFixed(2)}€</Text>
         </View>
       </View>
-
-      {/* PURCHASE HISTORY */}
 
       <View style={styles.card}>
         <View style={styles.cardHeader}>
           <Ionicons name="time-outline" size={20} color="#EC6A8E" />
-
           <Text style={styles.cardTitle}>Historique des achats</Text>
         </View>
 
-        {user?.purchases?.length > 0 ? (
-          user.purchases.map((purchase) => (
-            <View
-              key={purchase._id}
-              style={{
-                paddingVertical: 12,
-                borderBottomWidth: 1,
-                borderBottomColor: "#eee",
-              }}
-            >
-              <Text
+        {purchases.length > 0 ? (
+          <ScrollView
+            style={{ maxHeight: 320 }}
+            nestedScrollEnabled
+            showsVerticalScrollIndicator
+          >
+            {purchases.map((purchase) => (
+              <View
+                key={purchase._id}
                 style={{
-                  fontWeight: "600",
-                  color: "#333",
+                  paddingVertical: 12,
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#eee",
                 }}
               >
-                {purchase.quantity} billet(s)
-              </Text>
+                <Text style={{ fontWeight: "600", color: "#333" }}>
+                  {purchase.quantity} billet(s)
+                </Text>
 
-              <Text
-                style={{
-                  color: "#666",
-                  marginTop: 4,
-                }}
-              >
-                {purchase.total_amount}
-                {purchase.currency}
-              </Text>
+                <Text style={{ color: "#666", marginTop: 4 }}>
+                  {purchase.total_amount} {purchase.currency}
+                </Text>
 
-              <Text
-                style={{
-                  color: "#999",
-                  marginTop: 2,
-                }}
-              >
-                {new Date(purchase.created_at).toLocaleDateString()}
-              </Text>
-            </View>
-          ))
+                <Text style={{ color: "#999", marginTop: 2 }}>
+                  {new Date(purchase.created_at).toLocaleDateString()}
+                </Text>
+              </View>
+            ))}
+          </ScrollView>
         ) : (
           <Text style={styles.emptyText}>Aucun achat pour le moment</Text>
         )}
       </View>
-
-      {/* SETTINGS */}
 
       <View style={styles.card}>
         <Text style={styles.settingsTitle}>Paramètres du compte</Text>
@@ -277,11 +245,8 @@ export default function ProfileScreen() {
         ) : null}
       </View>
 
-      {/* LOGOUT */}
-
       <TouchableOpacity style={styles.logoutButton} onPress={logout}>
         <Ionicons name="log-out-outline" size={18} color="#fff" />
-
         <Text style={styles.logoutText}>Se déconnecter</Text>
       </TouchableOpacity>
     </ScrollView>

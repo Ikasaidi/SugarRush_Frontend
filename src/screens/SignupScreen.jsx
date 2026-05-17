@@ -3,6 +3,11 @@ import {
   View,
   Text,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+  Keyboard,
+  Platform,
 } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -41,8 +46,8 @@ export default function SignupScreen() {
   const [loading, setLoading] = useState(false);
 
   // ERROR MESSAGE
-  const [errorMessage, setErrorMessage] =
-    useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [errors, setErrors] = useState({});
 
   // =========================================================
   // SIGNUP
@@ -51,14 +56,34 @@ export default function SignupScreen() {
 
     // RESET ERROR
     setErrorMessage("");
+    setErrors({});
 
     // VALIDATION FRONT
-    if (!username || !email || !password) {
+    const newErrors = {};
 
-      setErrorMessage(
-        "Please fill in all required fields."
-      );
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const usernameRegex = /^[a-zA-Z0-9_]{3,30}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
 
+    if (!username) newErrors.username = "Le nom d'utilisateur est requis.";
+    else if (!usernameRegex.test(username)) newErrors.username = "Nom d'utilisateur invalide (3 à 30 lettres, chiffres ou _).";
+
+    if (!email) newErrors.email = "L'email est requis.";
+    else if (!emailRegex.test(email)) newErrors.email = "Votre email est pas valide.";
+
+    if (!password) newErrors.password = "Le mot de passe est requis.";
+    else if (!passwordRegex.test(password)) {
+      newErrors.password = "Le mot de passe doit contenir 8 caractères ou plus avec majuscule, minuscule, chiffre et symbole.";
+    }
+
+    if (lname && lname.length < 2) newErrors.lname = "Le nom de famille est trop court.";
+
+    // phone: expect 10 digits
+    const phoneDigits = phone.replace(/\D/g, '');
+    if (phone && phoneDigits.length !== 10) newErrors.phone = "Le téléphone doit contenir 10 chiffres (ex. 413-222-2222).";
+
+    if (Object.keys(newErrors).length) {
+      setErrors(newErrors);
       return;
     }
 
@@ -103,21 +128,26 @@ export default function SignupScreen() {
         error?.response?.data?.message;
 
       // MESSAGE PERSONNALISÉ
-      if (
+      if (backendMessage?.toLowerCase().includes("password")) {
+
+        setErrorMessage(
+          "Le mot de passe est invalide. Utilise 8+ caractères avec majuscule, minuscule, chiffre et symbole."
+        );
+
+      } else if (
         backendMessage?.toLowerCase().includes("invalid") ||
-        backendMessage?.toLowerCase().includes("incorrect") ||
-        backendMessage?.toLowerCase().includes("password")
+        backendMessage?.toLowerCase().includes("incorrect")
       ) {
 
         setErrorMessage(
-          "The information entered is invalid. Please try again."
+          "Les informations saisies sont invalides. Réessaie plus tard."
         );
 
       } else {
 
         setErrorMessage(
           backendMessage ||
-          "Signup failed. Please try again."
+          "Échec de l'inscription. Réessaie plus tard."
         );
       }
 
@@ -137,7 +167,13 @@ export default function SignupScreen() {
       style={styles.background}
     >
 
-      <View style={styles.card}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+
+          <View style={styles.card}>
 
         <LogoCircle />
 
@@ -146,108 +182,8 @@ export default function SignupScreen() {
         </Text>
 
         <Text style={styles.subtitle}>
-          Create your account
+          Créez votre compte
         </Text>
-
-        {/* USERNAME */}
-        <IconInput
-          icon="person-outline"
-          placeholder="Username"
-          value={username}
-          onChangeText={setUsername}
-        />
-
-        {/* EMAIL */}
-        <IconInput
-          icon="mail-outline"
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-        />
-
-        {/* PASSWORD */}
-        <IconInput
-          icon="lock-closed-outline"
-          placeholder="Password"
-          secure
-          value={password}
-          onChangeText={setPassword}
-        />
-
-        {/* FIRST NAME */}
-        <IconInput
-          icon="person-outline"
-          placeholder="First name"
-          value={fname}
-          onChangeText={setFname}
-        />
-
-        {/* LAST NAME */}
-        <IconInput
-          icon="person-outline"
-          placeholder="Last name"
-          value={lname}
-          onChangeText={setLname}
-        />
-
-        {/* PHONE */}
-        <IconInput
-          icon="call-outline"
-          placeholder="Phone"
-          value={phone}
-          onChangeText={setPhone}
-        />
-
-        {/* ADDRESS */}
-        <IconInput
-          icon="home-outline"
-          placeholder="Address"
-          value={address}
-          onChangeText={setAddress}
-        />
-
-        {/* ACCOUNT TYPE */}
-        <View style={styles.typeContainer}>
-
-          <Text style={styles.typeTitle}>
-            Account type
-          </Text>
-
-          <View style={styles.typeButtons}>
-
-            {[
-              {
-                key: "student",
-                label: "Student",
-              },
-              {
-                key: "adult",
-                label: "Adult",
-              },
-              {
-                key: "senior",
-                label: "Senior",
-              },
-            ].map((item) => (
-
-              <Text
-                key={item.key}
-                style={[
-                  styles.typeButton,
-                  userType === item.key &&
-                    styles.activeType,
-                ]}
-                onPress={() =>
-                  setUserType(item.key)
-                }
-              >
-                {item.label}
-              </Text>
-
-            ))}
-
-          </View>
-        </View>
 
         {/* ERROR MESSAGE */}
         {errorMessage ? (
@@ -262,6 +198,116 @@ export default function SignupScreen() {
 
         ) : null}
 
+        {/* USERNAME */}
+        <IconInput
+          icon="person-outline"
+          placeholder="Nom d'utilisateur"
+          value={username}
+          onChangeText={(t) => { setUsername(t); if (errors.username) setErrors(prev=> ({...prev, username: ''})); }}
+          onBlur={() => {
+            if (!username) setErrors(prev => ({ ...prev, username: "Le nom d'utilisateur est requis." }));
+          }}
+          error={errors.username}
+        />
+
+        {/* EMAIL */}
+        <IconInput
+          icon="mail-outline"
+          placeholder="E-mail"
+          value={email}
+          onChangeText={(t) => { setEmail(t); if (errors.email) setErrors(prev=> ({...prev, email: ''})); }}
+          keyboardType="email-address"
+          onBlur={() => {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email && !emailRegex.test(email)) setErrors(prev => ({ ...prev, email: "L'adresse e-mail est invalide." }));
+          }}
+          error={errors.email}
+        />
+
+        {/* PASSWORD */}
+        <IconInput
+          icon="lock-closed-outline"
+          placeholder="Mot de passe"
+          secure
+          value={password}
+          onChangeText={(t) => { setPassword(t); if (errors.password) setErrors(prev=> ({...prev, password: ''})); }}
+          error={errors.password}
+        />
+
+        {/* FIRST NAME */}
+        <IconInput
+          icon="person-outline"
+          placeholder="Prénom"
+          value={fname}
+          onChangeText={(t) => { setFname(t); }}
+        />
+
+        {/* LAST NAME */}
+        <IconInput
+          icon="person-outline"
+          placeholder="Nom de famille"
+          value={lname}
+          onChangeText={(t) => { setLname(t); if (errors.lname) setErrors(prev=> ({...prev, lname: ''})); }}
+          error={errors.lname}
+        />
+
+        {/* PHONE */}
+        <IconInput
+          icon="call-outline"
+          placeholder="Téléphone"
+          value={phone}
+          onChangeText={(t) => { setPhone(t); if (errors.phone) setErrors(prev=> ({...prev, phone: ''})); }}
+          keyboardType="phone-pad"
+          error={errors.phone}
+        />
+
+        {/* ADDRESS */}
+        <IconInput
+          icon="home-outline"
+          placeholder="Adresse"
+          value={address}
+          onChangeText={(t) => { setAddress(t); }}
+        />
+
+        {/* ACCOUNT TYPE */}
+          <View style={styles.typeContainer}>
+
+          <Text style={styles.typeTitle}>
+            Type de compte
+          </Text>
+
+          <View style={styles.typeButtons}>
+
+            {[
+              { key: "student", label: "Étudiant" },
+              { key: "adult", label: "Adulte" },
+              { key: "senior", label: "Sénior" },
+            ].map((item) => (
+
+              <TouchableOpacity
+                key={item.key}
+                style={[
+                  styles.typeButton,
+                  userType === item.key && styles.activeType,
+                ]}
+                onPress={() => setUserType(item.key)}
+              >
+                <Text
+                  style={[
+                    styles.typeButtonText,
+                    userType === item.key && styles.activeTypeText,
+                  ]}
+                  numberOfLines={1}
+                >
+                  {item.label}
+                </Text>
+              </TouchableOpacity>
+
+            ))}
+
+          </View>
+        </View>
+
         {/* BUTTON / LOADING */}
         {loading ? (
 
@@ -273,7 +319,7 @@ export default function SignupScreen() {
         ) : (
 
           <GradientButton
-            title="Create my account"
+            title="Créer mon compte"
             onPress={handleSignup}
           />
 
@@ -282,7 +328,7 @@ export default function SignupScreen() {
         {/* FOOTER */}
         <Text style={styles.footer}>
 
-          Already have an account?{" "}
+          Vous avez déjà un compte ?{" "}
 
           <Text
             style={styles.link}
@@ -290,14 +336,17 @@ export default function SignupScreen() {
               navigation.navigate("Login")
             }
           >
-            Log in
+            Se connecter
           </Text>
 
         </Text>
 
         <PageDots />
 
-      </View>
+          </View>
+
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
 
     </LinearGradient>
   );

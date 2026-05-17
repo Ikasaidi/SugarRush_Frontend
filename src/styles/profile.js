@@ -216,6 +216,13 @@ const styles = StyleSheet.create({
         marginTop: 2,
     },
 
+    emailHint: {
+        color: "rgba(255,255,255,0.9)",
+        fontSize: 13,
+        marginTop: 10,
+        textAlign: "center",
+    },
+
     scrollContainer: {
         flexGrow: 1,
         alignItems: "center",
@@ -227,11 +234,129 @@ const styles = StyleSheet.create({
         maxWidth: 450,
         backgroundColor: "#FCE4EC",
         borderRadius: 20,
-        padding: 15,
+        padding: 18,
         shadowColor: "#250404",
         shadowOpacity: 0.05,
         shadowRadius: 10,
         elevation: 2,
+    },
+
+    sectionHeader: {
+        fontSize: 16,
+        fontWeight: "700",
+        color: "#B85A7A",
+        marginBottom: 16,
+        textAlign: "center",
+    },
+
+    fieldLabel: {
+        fontSize: 13,
+        fontWeight: "700",
+        color: "#9E5A75",
+        marginBottom: 6,
+        marginTop: 6,
+        marginLeft: 2,
+    },
+
+    passwordActionButton: {
+        backgroundColor: "#EC6A8E",
+        paddingVertical: 11,
+        paddingHorizontal: 14,
+        borderRadius: 12,
+        marginTop: 10,
+        marginBottom: 8,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+
+    passwordActionText: {
+        color: "#fff",
+        fontSize: 13,
+        fontWeight: "700",
+        marginLeft: 8,
+        textAlign: "center",
+    },
+
+    passwordActionButtonBottom: {
+        marginTop: 14,
+        paddingVertical: 12,
+        paddingHorizontal: 14,
+        borderRadius: 12,
+        borderWidth: 1.5,
+        borderColor: "#EC6A8E",
+        backgroundColor: "#FFF5F8",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+
+    passwordActionTextBottom: {
+        color: "#C84F79",
+        fontSize: 13,
+        fontWeight: "700",
+        marginLeft: 8,
+    },
+
+    modalOverlay: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.45)",
+        paddingHorizontal: 18,
+    },
+
+    modalBackdrop: {
+        ...StyleSheet.absoluteFillObject,
+    },
+
+    modalCard: {
+        width: "100%",
+        maxWidth: 420,
+        backgroundColor: "#fff",
+        borderRadius: 22,
+        padding: 18,
+    },
+
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: "800",
+        color: "#B85A7A",
+        textAlign: "center",
+        marginBottom: 14,
+    },
+
+    modalActions: {
+        flexDirection: "row",
+        gap: 10,
+        marginTop: 10,
+    },
+
+    modalCancelButton: {
+        flex: 1,
+        paddingVertical: 12,
+        borderRadius: 12,
+        backgroundColor: "#F3F3F3",
+        alignItems: "center",
+    },
+
+    modalCancelText: {
+        color: "#555",
+        fontWeight: "700",
+    },
+
+    modalConfirmButton: {
+        flex: 1,
+        paddingVertical: 12,
+        borderRadius: 12,
+        backgroundColor: "#EC6A8E",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+
+    modalConfirmText: {
+        color: "#fff",
+        fontWeight: "700",
     },
 
     inputRow: {
@@ -241,7 +366,7 @@ const styles = StyleSheet.create({
         paddingVertical: 9,
         paddingHorizontal: 13,
         borderRadius: 10,
-        marginBottom: 55,
+        marginBottom: 14,
     },
 
     inputText: {
@@ -254,17 +379,57 @@ const styles = StyleSheet.create({
         width: "90%",
         maxWidth: 400,
         marginTop: 20,
+        alignSelf: "center",
+        alignItems: "center",
     },
 
     btnGradient: {
         padding: 14,
         borderRadius: 12,
         alignItems: "center",
+        width: 220,
+        alignSelf: "center",
     },
 
     btnText: {
         color: "#fff",
         fontSize: 14,
+        fontWeight: "600",
+    },
+
+    errorBox: {
+        backgroundColor: "rgba(214, 69, 69, 0.08)",
+        borderWidth: 1,
+        borderColor: "rgba(214, 69, 69, 0.35)",
+        paddingVertical: 10,
+        paddingHorizontal: 14,
+        borderRadius: 12,
+        marginTop: 8,
+        marginBottom: 10,
+    },
+
+    errorText: {
+        color: "#D64545",
+        textAlign: "center",
+        fontSize: 13,
+        fontWeight: "600",
+    },
+
+    successBox: {
+        backgroundColor: "rgba(78, 182, 106, 0.12)",
+        borderWidth: 1,
+        borderColor: "rgba(78, 182, 106, 0.35)",
+        paddingVertical: 10,
+        paddingHorizontal: 14,
+        borderRadius: 12,
+        marginTop: 8,
+        marginBottom: 10,
+    },
+
+    successText: {
+        color: "#2E8B57",
+        textAlign: "center",
+        fontSize: 13,
         fontWeight: "600",
     },
     cardPremium: {

@@ -16,7 +16,7 @@ import AuthContext from "../context/AuthContext";
 import API from "../services/api";
 import styles from "../styles/profile";
 
-const TRAIN_STOP_URL = "http://YOUR_TRAIN_IP:YOUR_PORT/stop";
+const TRAIN_STOP_URL = "https://10.10.17.15/stop";
 
 export default function AdminPanelScreen() {
 	const navigation = useNavigation();
@@ -45,7 +45,7 @@ export default function AdminPanelScreen() {
 		showFeedback("", "");
 
 		try {
-			await fetch(TRAIN_STOP_URL, {
+			const response = await fetch(TRAIN_STOP_URL, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -56,9 +56,26 @@ export default function AdminPanelScreen() {
 				}),
 			});
 
+			if (!response.ok) {
+				throw new Error(`HTTP_${response.status}`);
+			}
+
 			showFeedback("Train arrêté avec succès.", "success");
 		} catch (err) {
-			showFeedback("Impossible d'arrêter le train.", "error");
+			const errorText = String(err?.message || "");
+
+			if (
+				errorText.includes("Network request failed") ||
+				errorText.includes("Failed to fetch") ||
+				errorText.includes("fetch") ||
+				errorText.includes("HTTP_0")
+			) {
+				showFeedback("Adresse du train injoignable. Vérifie l'IP ou la connexion.", "error");
+			} else if (errorText.startsWith("HTTP_")) {
+				showFeedback("Le train a répondu avec une erreur. Réessaie plus tard.", "error");
+			} else {
+				showFeedback("Impossible d'arrêter le train.", "error");
+			}
 			console.log("TRAIN STOP ERROR:", err?.message || err);
 		} finally {
 			setTrainLoading(false);

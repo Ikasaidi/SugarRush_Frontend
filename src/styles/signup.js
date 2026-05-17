@@ -101,56 +101,73 @@ typeTitle: {
 typeButtons: {
   flexDirection: "row",
   justifyContent: "space-between",
-  gap: 10,
+  alignItems: "center",
+  width: "100%",
+  // spacing handled by individual buttons' margin
 },
 
 typeButton: {
   flex: 1,
-  paddingVertical: 12,
+  paddingVertical: 16,
+  paddingHorizontal: 14,
+  minHeight: 48,
   borderRadius: 30,
   textAlign: "center",
-  backgroundColor: "#ffffff", // rose pastel
+  backgroundColor: "#ffffff",
   color: "#EC6A8E",
   fontWeight: "600",
   borderWidth: 2,
-  borderColor: "transparent",
+  borderColor: "#FF8FB3",
   overflow: "hidden",
-    borderColor: "#FF8FB3", // contour rose
+  marginHorizontal: 6,
+  justifyContent: "center",
+  alignItems: "center",
+  fontSize: 15,
   shadowColor: "#FF8FB3",
+},
+
+typeButtonText: {
+  color: "#EC6A8E",
+  fontWeight: "600",
+  textAlign: "center",
+  includeFontPadding: false,
+  textAlignVertical: 'center',
+  fontSize: 15,
 },
 
 activeType: {
   backgroundColor: "#EC6A8E",
   color: "#ffffff",
-  borderColor: "#FF8FB3", // contour rose
+  borderColor: "#FF8FB3",
   shadowColor: "#FF8FB3",
   shadowOpacity: 0.4,
   shadowRadius: 8,
   elevation: 4,
+  transform: [{ scale: 1.02 }],
+},
+activeTypeText: {
+  color: '#ffffff',
 },
 
+
 errorBox: {
-  backgroundColor: "rgba(255,0,0,0.15)",
+  backgroundColor: "rgba(214, 69, 69, 0.08)",
   borderWidth: 1,
-  borderColor: "#ff4d4d",
-
-  paddingVertical: 12,
-  paddingHorizontal: 16,
-
+  borderColor: "rgba(214, 69, 69, 0.35)",
+  paddingVertical: 10,
+  paddingHorizontal: 14,
   borderRadius: 12,
-
-  marginVertical: 12,
-  marginHorizontal: 20,
-
+  marginTop: 10,
+  marginBottom: 14,
   alignSelf: "stretch",
 },
 
 errorText: {
-  color: "#fff",
+  color: "#D64545",
   textAlign: "center",
-  fontSize: 14,
+  fontSize: 13,
   fontWeight: "600",
-  lineHeight: 20,
+  lineHeight: 18,
 },
 
 

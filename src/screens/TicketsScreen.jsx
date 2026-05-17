@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -11,6 +11,8 @@ import { Ionicons } from "@expo/vector-icons";
 
 import styles from "../styles/ticket.js";
 import { useCards } from "../context/CardContext";
+import API from "../services/api";
+import AuthContext from "../context/AuthContext";
 
 const ticketTypes = [
   {
@@ -24,6 +26,9 @@ const ticketTypes = [
 
 export default function TicketsScreen({ navigation }) {
   const { cards } = useCards();
+  const { refreshUser } = useContext(AuthContext);
+
+  const [loadingBuy, setLoadingBuy] = useState(false);
 
   const [selectedTicket] = useState(ticketTypes[0]);
   const [quantity, setQuantity] = useState(1);
@@ -40,7 +45,7 @@ export default function TicketsScreen({ navigation }) {
     }, 2500);
   };
 
-  const handleBuy = () => {
+  const handleBuy = async () => {
     if (cards.length === 0) {
       navigation.navigate("Payment");
       return;
@@ -54,12 +59,33 @@ export default function TicketsScreen({ navigation }) {
       return;
     }
 
-    showToast(
-      `${quantity} billet(s) acheté(s) avec succès.`,
-      "success"
-    );
+    try {
+      setLoadingBuy(true);
 
-    setQuantity(1);
+      const res = await API.post("/purchases/purchase", {
+        quantity,
+        unit_price: selectedTicket.price,
+        currency: "USD",
+      });
+
+      console.log("PURCHASE RESPONSE:", res?.data);
+
+      showToast(
+        `${quantity} billet(s) acheté(s) avec succès.`,
+        "success"
+      );
+
+      setQuantity(1);
+
+      // refresh user to update wallet/purchases
+      if (typeof refreshUser === "function") await refreshUser();
+
+    } catch (error) {
+      console.log("PURCHASE ERROR:", error?.response?.data || error.message);
+      showToast("Erreur lors de l'achat. Réessaie plus tard.", "error");
+    } finally {
+      setLoadingBuy(false);
+    }
   };
 
   return (
