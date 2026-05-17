@@ -16,7 +16,7 @@ import AuthContext from "../context/AuthContext";
 import API from "../services/api";
 import styles from "../styles/profile";
 
-const TRAIN_STOP_URL = "https://10.10.17.15/stop";
+const TRAIN_STOP_URL = "http://10.10.28.131/close";
 
 export default function AdminPanelScreen() {
 	const navigation = useNavigation();
