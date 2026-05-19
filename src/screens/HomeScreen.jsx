@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -66,13 +65,25 @@ export default function HomeScreen() {
 
   const formatStation = (station) => {
     if (!station) return "Station inconnue";
+
+    const normalizedStation = String(station).trim().toLowerCase();
+
+    if (["station-1", "station_1", "station 1", "station1"].includes(normalizedStation)) {
+      return "BubbleGum";
+    }
+
+    if (["station-2", "station_2", "station 2", "station2"].includes(normalizedStation)) {
+      return "Candy Cloud";
+    }
+
     return station.replace("station-", "Station ").replace("station_", "Station ");
   };
 
   const isTrainOffline = () => {
     if (!trainStatus) return true;
     if (trainStatus.service_status === "offline") return true;
-    if (!trainStatus.last_seen_at) return true;
+
+    if (!trainStatus.last_seen_at) return false;
 
     const lastSeen = new Date(trainStatus.last_seen_at);
     return now - lastSeen > STALE_AFTER_MS;
@@ -424,10 +435,6 @@ export default function HomeScreen() {
 
                 <View style={styles.bottomRow}>
                   <Text style={styles.helperText}>{status.helper}</Text>
-
-                  <TouchableOpacity style={styles.detailsButton}>
-                    <Text style={styles.detailsButtonText}>Détails</Text>
-                  </TouchableOpacity>
                 </View>
               </View>
             );
@@ -640,22 +647,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     flex: 1,
     marginRight: 10,
-  },
-  detailsButton: {
-    backgroundColor: "#F36F98",
-    paddingVertical: 10,
-    paddingHorizontal: 22,
-    borderRadius: 14,
-    shadowColor: "#F36F98",
-    shadowOpacity: 0.35,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 3,
-  },
-  detailsButtonText: {
-    color: "#FFFFFF",
-    fontSize: 12,
-    fontWeight: "900",
   },
   loadingBox: {
     alignItems: "center",

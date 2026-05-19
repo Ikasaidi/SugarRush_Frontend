@@ -2,8 +2,12 @@ import axios from "axios";
 
 import { TokenService } from "./tokenService";
 
+const API_BASE_URL =
+  process.env.EXPO_PUBLIC_API_URL ||
+  "https://sugarrush-backend-l4f0.onrender.com/api";
+
 const API = axios.create({
-  baseURL: 'https://sugarrush-backend-l4f0.onrender.com/api', // METTRE SON IP
+  baseURL: API_BASE_URL,
 });
 
 // =======================================================
