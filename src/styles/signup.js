@@ -7,7 +7,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   card: {
-    width: '88%',
+    width: '94%',
     backgroundColor: '#FFF',
     borderRadius: 28,
     padding: 24,

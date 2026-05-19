@@ -181,18 +181,21 @@ export default function PersonalInfoScreen() {
     <View style={styles.container}>
       <LinearGradient colors={["#FF8FB3", "#EC6A8E"]} style={styles.headerClean}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={{ width: "100%", alignItems: "center" }}>
+          <View style={styles.headerContent}>
             <TouchableOpacity
               style={styles.backButtonClean}
               onPress={() => navigation.goBack()}
+              activeOpacity={0.8}
             >
               <Ionicons name="arrow-back" size={20} color="#fff" />
             </TouchableOpacity>
 
-            <Text style={styles.title}>Mon Profil</Text>
-            <Text style={styles.subtitle}>Modifier mes informations</Text>
+            <View style={styles.headerTitleBox}>
+              <Text style={styles.title}>Mon Profil</Text>
+              <Text style={styles.subtitle}>Modifier mes informations</Text>
+            </View>
 
-           
+            <View style={styles.headerSpacer} />
           </View>
         </TouchableWithoutFeedback>
       </LinearGradient>
@@ -212,7 +215,7 @@ export default function PersonalInfoScreen() {
 
               <Text style={styles.fieldLabel}>Nom d'utilisateur</Text>
               <IconInput
-                icon="at-outline"
+                icon="person-circle-outline"
                 placeholder="Nom d'utilisateur"
                 value={username}
                 onChangeText={(text) => {
@@ -224,7 +227,7 @@ export default function PersonalInfoScreen() {
 
               <Text style={styles.fieldLabel}>Nom de famille</Text>
               <IconInput
-                icon="person-outline"
+                icon="people-outline"
                 placeholder="Nom de famille"
                 value={lname}
                 onChangeText={(text) => {

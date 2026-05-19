@@ -4,6 +4,13 @@ import { Ionicons } from '@expo/vector-icons';
 import styles from "../styles/tab";
 
 export default function TabBar({ state, descriptors, navigation }) {
+    const labelMap = {
+        Schedule: 'Horaires',
+        'My QR': 'Mon QR',
+        Tickets: 'Billets',
+        Profile: 'Profil',
+    };
+
     return (
         <View style={styles.container}>
             {state.routes.map((route, index) => {
@@ -45,7 +52,7 @@ export default function TabBar({ state, descriptors, navigation }) {
                                 isFocused && styles.labelActive,
                             ]}
                         >
-                            {route.name}
+                            {labelMap[route.name] || route.name}
                         </Text>
                     </TouchableOpacity>
                 );

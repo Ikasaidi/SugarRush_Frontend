@@ -1,7 +1,7 @@
 // screens/ProfileScreen.tsx
 
 import React, { useContext, useState, useCallback } from "react";
-import { View, Text, TouchableOpacity, ScrollView, RefreshControl, ActivityIndicator } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, RefreshControl } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
@@ -9,6 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import AuthContext from "../context/AuthContext";
 import styles from "../styles/profile";
+import { formatCAD } from "../utils/currency";
 
 export default function ProfileScreen() {
   const { user, logout, refreshUser } = useContext(AuthContext);
@@ -86,37 +87,6 @@ export default function ProfileScreen() {
           <Text style={styles.cardTitle}>Mon portefeuille</Text>
         </View>
 
-        <TouchableOpacity
-          onPress={handleRefresh}
-          activeOpacity={0.85}
-          style={{
-            alignSelf: "flex-start",
-            marginBottom: 14,
-            paddingHorizontal: 14,
-            paddingVertical: 9,
-            backgroundColor: "#EC6A8E",
-            borderRadius: 18,
-            flexDirection: "row",
-            alignItems: "center",
-            shadowColor: "#000",
-            shadowOpacity: 0.15,
-            shadowRadius: 6,
-            shadowOffset: { width: 0, height: 3 },
-            elevation: 4,
-          }}
-        >
-          {refreshing ? (
-            <ActivityIndicator size="small" color="#fff" />
-          ) : (
-            <>
-              <Ionicons name="refresh-outline" size={18} color="#fff" />
-              <Text style={{ color: "#fff", marginLeft: 8, fontWeight: "700" }}>
-                Rafraîchir
-              </Text>
-            </>
-          )}
-        </TouchableOpacity>
-
         <View style={styles.walletRow}>
           <View style={[styles.ticketBox, styles.freeBox]}>
             <Text style={styles.ticketLabel}>Billets gratuits</Text>
@@ -133,7 +103,7 @@ export default function ProfileScreen() {
 
         <View style={styles.totalRow}>
           <Text style={styles.totalText}>Total dépensé</Text>
-          <Text style={styles.totalAmount}>{(user?.stats?.total_spent || 0).toFixed(2)}€</Text>
+          <Text style={styles.totalAmount}>{formatCAD(user?.stats?.total_spent || 0)}</Text>
         </View>
       </View>
 
@@ -163,7 +133,7 @@ export default function ProfileScreen() {
                 </Text>
 
                 <Text style={{ color: "#666", marginTop: 4 }}>
-                  {purchase.total_amount} {purchase.currency}
+                  {formatCAD(purchase.total_amount)}
                 </Text>
 
                 <Text style={{ color: "#999", marginTop: 2 }}>

@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Keyboard,
   Platform,
+  ScrollView,
 } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -44,6 +45,7 @@ export default function SignupScreen() {
     useState("student");
 
   const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   // ERROR MESSAGE
   const [errorMessage, setErrorMessage] = useState("");
@@ -53,6 +55,8 @@ export default function SignupScreen() {
   // SIGNUP
   // =========================================================
   const handleSignup = async () => {
+
+    setSubmitted(true);
 
     // RESET ERROR
     setErrorMessage("");
@@ -76,11 +80,19 @@ export default function SignupScreen() {
       newErrors.password = "Le mot de passe doit contenir 8 caractères ou plus avec majuscule, minuscule, chiffre et symbole.";
     }
 
-    if (lname && lname.length < 2) newErrors.lname = "Le nom de famille est trop court.";
+    if (!fname) newErrors.fname = "Le prénom est requis.";
 
-    // phone: expect 10 digits
-    const phoneDigits = phone.replace(/\D/g, '');
-    if (phone && phoneDigits.length !== 10) newErrors.phone = "Le téléphone doit contenir 10 chiffres (ex. 413-222-2222).";
+    if (!lname) newErrors.lname = "Le nom de famille est requis.";
+    else if (lname.length < 2) newErrors.lname = "Le nom de famille est trop court.";
+
+    if (!phone) newErrors.phone = "Le téléphone est requis.";
+    else {
+      // phone: expect 10 digits
+      const phoneDigits = phone.replace(/\D/g, '');
+      if (phoneDigits.length !== 10) newErrors.phone = "Le téléphone doit contenir 10 chiffres (ex. 413-222-2222).";
+    }
+
+    if (!address) newErrors.address = "L'adresse est requise.";
 
     if (Object.keys(newErrors).length) {
       setErrors(newErrors);
@@ -173,6 +185,19 @@ export default function SignupScreen() {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 
+          <ScrollView
+            style={{ width: '100%' }}
+            contentContainerStyle={{
+              flexGrow: 1,
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              paddingVertical: 18,
+            }}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
+            showsVerticalScrollIndicator={false}
+          >
+
           <View style={styles.card}>
 
         <LogoCircle />
@@ -186,7 +211,7 @@ export default function SignupScreen() {
         </Text>
 
         {/* ERROR MESSAGE */}
-        {errorMessage ? (
+        {submitted && errorMessage ? (
 
           <View style={styles.errorBox}>
 
@@ -204,10 +229,7 @@ export default function SignupScreen() {
           placeholder="Nom d'utilisateur"
           value={username}
           onChangeText={(t) => { setUsername(t); if (errors.username) setErrors(prev=> ({...prev, username: ''})); }}
-          onBlur={() => {
-            if (!username) setErrors(prev => ({ ...prev, username: "Le nom d'utilisateur est requis." }));
-          }}
-          error={errors.username}
+          error={submitted ? errors.username : ''}
         />
 
         {/* EMAIL */}
@@ -217,11 +239,7 @@ export default function SignupScreen() {
           value={email}
           onChangeText={(t) => { setEmail(t); if (errors.email) setErrors(prev=> ({...prev, email: ''})); }}
           keyboardType="email-address"
-          onBlur={() => {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (email && !emailRegex.test(email)) setErrors(prev => ({ ...prev, email: "L'adresse e-mail est invalide." }));
-          }}
-          error={errors.email}
+          error={submitted ? errors.email : ''}
         />
 
         {/* PASSWORD */}
@@ -231,7 +249,7 @@ export default function SignupScreen() {
           secure
           value={password}
           onChangeText={(t) => { setPassword(t); if (errors.password) setErrors(prev=> ({...prev, password: ''})); }}
-          error={errors.password}
+          error={submitted ? errors.password : ''}
         />
 
         {/* FIRST NAME */}
@@ -239,7 +257,8 @@ export default function SignupScreen() {
           icon="person-outline"
           placeholder="Prénom"
           value={fname}
-          onChangeText={(t) => { setFname(t); }}
+          onChangeText={(t) => { setFname(t); if (errors.fname) setErrors(prev=> ({...prev, fname: ''})); }}
+          error={submitted ? errors.fname : ''}
         />
 
         {/* LAST NAME */}
@@ -248,7 +267,7 @@ export default function SignupScreen() {
           placeholder="Nom de famille"
           value={lname}
           onChangeText={(t) => { setLname(t); if (errors.lname) setErrors(prev=> ({...prev, lname: ''})); }}
-          error={errors.lname}
+          error={submitted ? errors.lname : ''}
         />
 
         {/* PHONE */}
@@ -258,7 +277,7 @@ export default function SignupScreen() {
           value={phone}
           onChangeText={(t) => { setPhone(t); if (errors.phone) setErrors(prev=> ({...prev, phone: ''})); }}
           keyboardType="phone-pad"
-          error={errors.phone}
+          error={submitted ? errors.phone : ''}
         />
 
         {/* ADDRESS */}
@@ -266,7 +285,8 @@ export default function SignupScreen() {
           icon="home-outline"
           placeholder="Adresse"
           value={address}
-          onChangeText={(t) => { setAddress(t); }}
+          onChangeText={(t) => { setAddress(t); if (errors.address) setErrors(prev=> ({...prev, address: ''})); }}
+          error={submitted ? errors.address : ''}
         />
 
         {/* ACCOUNT TYPE */}
@@ -344,6 +364,8 @@ export default function SignupScreen() {
         <PageDots />
 
           </View>
+
+          </ScrollView>
 
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>

@@ -193,26 +193,48 @@ const styles = StyleSheet.create({
     },
 
     headerClean: {
-        paddingTop: 55,
-        paddingBottom: 25,
+        paddingTop: 56,
+        paddingBottom: 28,
+        paddingHorizontal: 16,
+        alignItems: "stretch",
+    },
+
+    headerContent: {
+        width: "100%",
+        flexDirection: "row",
         alignItems: "center",
     },
 
     backButtonClean: {
-        position: "absolute",
-        left: 15,
-        top: 55,
+        width: 34,
+        height: 34,
+        borderRadius: 17,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "rgba(255,255,255,0.14)",
+    },
+
+    headerTitleBox: {
+        flex: 1,
+        alignItems: "center",
+        paddingHorizontal: 8,
+    },
+
+    headerSpacer: {
+        width: 34,
+        height: 34,
     },
 
     title: {
         color: "#fff",
-        fontSize: 26,
-        fontWeight: "600",
+        fontSize: 24,
+        fontWeight: "700",
     },
 
     subtitle: {
         color: "#fff",
-        fontSize: 20,
+        fontSize: 13,
+        fontWeight: "700",
         marginTop: 2,
     },
 

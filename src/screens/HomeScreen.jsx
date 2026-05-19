@@ -441,7 +441,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#EFE7DF" },
   header: {
-    paddingTop: 28,
+    paddingTop: 56,
     paddingHorizontal: 18,
     paddingBottom: 34,
     borderBottomLeftRadius: 24,
@@ -454,7 +454,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginTop: 6,
   },
-  scroll: { flex: 1, marginTop: 18 },
+  scroll: { flex: 1, marginTop: 10 },
   scrollContent: { paddingHorizontal: 10, paddingBottom: 120 },
   realStatusCard: {
     backgroundColor: "#FFFFFF",

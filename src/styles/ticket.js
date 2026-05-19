@@ -5,13 +5,13 @@ const styles = StyleSheet.create({
 
     titleTickets: {
         color: "#FFFFFF",
-        fontSize: 22,
+        fontSize: 24,
         fontWeight: "700",
-        marginBottom: 16,
+        marginBottom: 6,
 
     },
     headerTickets: {
-        paddingTop: 22,
+        paddingTop: 56,
         paddingHorizontal: 14,
         paddingBottom: 32,
         borderBottomLeftRadius: 22,
@@ -20,9 +20,10 @@ const styles = StyleSheet.create({
 
     subtitleTickets: {
         color: "#fff",
-        fontSize: 15,
-        marginTop: 5,
-        marginLeft: 30,
+        fontSize: 13,
+        fontWeight: "700",
+        marginTop: 4,
+        marginLeft: 0,
         opacity: 1,
     },
 

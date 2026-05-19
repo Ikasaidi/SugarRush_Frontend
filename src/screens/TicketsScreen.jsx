@@ -13,6 +13,7 @@ import styles from "../styles/ticket.js";
 import { useCards } from "../context/CardContext";
 import API from "../services/api";
 import AuthContext from "../context/AuthContext";
+import { formatCAD } from "../utils/currency";
 
 const ticketTypes = [
   {
@@ -65,7 +66,7 @@ export default function TicketsScreen({ navigation }) {
       const res = await API.post("/purchases/purchase", {
         quantity,
         unit_price: selectedTicket.price,
-        currency: "USD",
+        currency: "CAD",
       });
 
       console.log("PURCHASE RESPONSE:", res?.data);
@@ -133,7 +134,7 @@ export default function TicketsScreen({ navigation }) {
             <Text style={styles.optionSubtitle}>{ticket.subtitle}</Text>
           </View>
 
-          <Text style={styles.optionPrice}>{ticket.price.toFixed(2)}$</Text>
+          <Text style={styles.optionPrice}>{formatCAD(ticket.price)}</Text>
         </TouchableOpacity>
       ))}
 
@@ -190,11 +191,11 @@ export default function TicketsScreen({ navigation }) {
         <View>
           <Text style={styles.totalLabel}>Total à payer</Text>
           <Text style={styles.totalSubLabel}>
-            {quantity} × {selectedTicket.price.toFixed(2)}$
+            {quantity} × {formatCAD(selectedTicket.price)}
           </Text>
         </View>
 
-        <Text style={styles.totalPrice}>{total.toFixed(2)}$</Text>
+        <Text style={styles.totalPrice}>{formatCAD(total)}</Text>
       </View>
 
       <Text style={styles.sectionTitle}>Mode de paiement</Text>
@@ -262,7 +263,7 @@ export default function TicketsScreen({ navigation }) {
         activeOpacity={0.85}
       >
         <Ionicons name="card-outline" size={16} color="#0D2B3E" />
-        <Text style={styles.payText}>Payer {total.toFixed(2)}$</Text>
+        <Text style={styles.payText}>Payer {formatCAD(total)}</Text>
       </TouchableOpacity>
 
 
