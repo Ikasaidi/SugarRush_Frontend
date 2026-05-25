@@ -2,10 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TOKEN_KEY = "auth_token";
 
-export const TokenService = {
-  // =====================================================
-  // SAVE TOKEN
-  // =====================================================
+const TokenService = {
 
   saveToken: async (token) => {
     try {
@@ -15,9 +12,7 @@ export const TokenService = {
     }
   },
 
-  // =====================================================
-  // GET TOKEN
-  // =====================================================
+
 
   getToken: async () => {
     try {
@@ -29,10 +24,6 @@ export const TokenService = {
     }
   },
 
-  // =====================================================
-  // DELETE TOKEN
-  // =====================================================
-
   clearToken: async () => {
     try {
       await AsyncStorage.removeItem(TOKEN_KEY);
@@ -41,3 +32,5 @@ export const TokenService = {
     }
   },
 };
+
+export default TokenService;
